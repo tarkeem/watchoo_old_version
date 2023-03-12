@@ -28,13 +28,13 @@ class _loadingPageState extends State<loadingPage>
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 4));
     _scaleAnimation = Tween<double>(begin: 7, end: 1).animate(
-        CurvedAnimation(parent: _controller, curve: Interval(0.1, 0.3)));
+        CurvedAnimation(parent: _controller, curve: Interval(0.1, 0.2)));
     _moveAnimation = Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(parent: _controller, curve: Interval(0.4, 0.6)));
+        CurvedAnimation(parent: _controller, curve: Interval(0.3, 0.5)));
     _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(parent: _controller, curve: Interval(0.7, 0.8)));
+        CurvedAnimation(parent: _controller, curve: Interval(0.6, 0.7)));
     _opacityAnimation2 = Tween<double>(begin: 0, end: 1)
-        .animate(CurvedAnimation(parent: _controller, curve: Interval(0.9, 1)));
+        .animate(CurvedAnimation(parent: _controller, curve: Interval(0.8, 0.9)));
 
     _controller.forward().then((value) {
       Navigator.of(context).push(

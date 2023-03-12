@@ -8,6 +8,7 @@ class Movie
   String article;
   List<Actor>cast;
   String img;
-  Movie({required this.name,required this.img,required this.duration,required this.article,required this.cast});
+  String movieUrl;
+  Movie({required this.name,required this.img,required this.movieUrl,required this.duration,required this.article,required this.cast});
   
 }

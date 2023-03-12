@@ -18,6 +18,7 @@ class MoviesLogic extends ChangeNotifier {
           img: ele['img'],
           duration: ele['duration'],
           article: ele['article'],
+          movieUrl: ele['movieUrl'],
           cast: []);
     }).toList();
 //...............................................................................
@@ -31,7 +32,9 @@ class MoviesLogic extends ChangeNotifier {
            img: ele['img'],
           duration: ele['duration'],
           article: ele['article'],
+           movieUrl: ele['movieUrl'],
           cast: []);
     }).toList();
+    notifyListeners();
   }
 }

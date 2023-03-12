@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/ticker_provider.dart';
 import 'package:lottie/lottie.dart';
 import 'package:watchoo/view/screens/mianMovieSc.dart';
 import 'package:watchoo/view/widgets/customTextField.dart';
+import 'package:elastic_drawer/elastic_drawer.dart';
 
 enum auth { logIn, signUp }
 
@@ -37,6 +38,7 @@ class _authenticationPageState extends State<authenticationPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+    
       backgroundColor: Colors.black,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -62,14 +64,24 @@ class _authenticationPageState extends State<authenticationPage>
                     SizedBox(
                       height: 10,
                     ),
-                    ElevatedButton(onPressed: () {
-                          PageRouteBuilder(
-          transitionDuration: Duration(seconds: 1),
-          pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(opacity: animation,child: mainPage(),);
-      });
-                    }, child: Text(authState==auth.logIn?'logIn':'signup')),
-                    SizedBox(height: 10,),
+                    ElevatedButton(
+                        onPressed: () {
+                          
+                          /*Navigator.of(context).push(PageRouteBuilder(
+                              transitionDuration: Duration(seconds: 1),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: mainPage(),
+                                );
+                              }));*/
+                        },
+                        child:
+                            Text(authState == auth.logIn ? 'logIn' : 'signup')),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

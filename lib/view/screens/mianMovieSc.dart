@@ -1,8 +1,12 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:elastic_drawer/elastic_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 import 'package:watchoo/model/film.dart';
+import 'package:watchoo/view/screens/filmPage.dart';
+import 'package:watchoo/view/widgets/listTileDrawer.dart';
 
 class mainPage extends StatefulWidget {
   mainPage({super.key});
@@ -11,42 +15,88 @@ class mainPage extends StatefulWidget {
   State<mainPage> createState() => _mainPageState();
 }
 
-  List<Movie>_moviesList=List.generate(10, (index) =>Movie(name: 'All Quite',img: 'movie.jpg', duration: '1:30:7', article: '$index', cast: []) );
-
+List<Movie> _moviesList = List.generate(
+    10,
+    (index) => Movie(
+        name: 'All Quite',
+        img: 'movie.jpg',
+        duration: '1:30:7',
+        article: '$index',
+        movieUrl: ':http://localhost:3000//Tutorial aplicación de banco desde CERO_ Flutter(360P).mp4',
+        cast: []));
 
 class _mainPageState extends State<mainPage> {
- 
-   Movie _selected=_moviesList[0];
- 
+  Movie _selected = _moviesList[0];
+
   @override
   Widget build(BuildContext context) {
-
     var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        fit: StackFit.expand,
+      body:ElasticDrawer(
+        mainColor: Colors.black,
+        drawerColor: Color.fromARGB(255, 255, 255, 255),
+        drawerChild: Column(
+          children: [
+          customListTile(lead: Text('Type 1'), trail: Icon(Icons.movie), fun: (){}),
+          customListTile(lead: Text('Type 1'), trail: Icon(Icons.movie), fun: (){}),
+          customListTile(lead: Text('Type 1'), trail: Icon(Icons.movie), fun: (){}),
+          customListTile(lead: Text('Type 1'), trail: Icon(Icons.movie), fun: (){}),
+          Spacer(),
+          customListTile(lead: Text('Type 1'), trail: Icon(Icons.logout), fun: (){}),
+          ],
+        ),
+        mainChild:Column(
         children: [
-          Positioned(
-              height: deviceSize.height / 2,
-              left: 0,
-              right: 0,
-              child: AnimatedSwitcher(
-                  duration: Duration(seconds: 1),
-                  child: _topPart(
-                      key: Key(_selected.article), movie: _selected))),
-          Positioned(
-              height: 100,
-              top: deviceSize.height / 2 - (100 / 3),
-              left: 0,
-              right: 0,
-              child: _middlePart((int idx) {
-                setState(() {
-                  _selected = _moviesList[idx];
-                });
-              }))
+          Expanded(
+            flex: 3,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Positioned(
+                    height: deviceSize.height / 2,
+                    left: 0,
+                    right: 0,
+                    child: AnimatedSwitcher(
+                        duration: Duration(seconds: 1),
+                        child: _topPart(
+                            key: Key(_selected.article), movie: _selected))),
+                Positioned(
+                    height: 100,
+                    top: deviceSize.height / 2 - (100 / 3),
+                    left: 0,
+                    right: 0,
+                    child: _middlePart((int idx) {
+                      setState(() {
+                        _selected = _moviesList[idx];
+                      });
+                    }))
+              ],
+            ),
+          ),
+          SizedBox(height: 20,),
+          
+          Expanded(
+              flex: 2,
+              child: CarouselSlider(
+                items: _moviesList.map((e) {
+                  return LayoutBuilder(
+                    builder:(p0, p1) => Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      height: p1.maxHeight,
+                      width: p1.maxWidth,
+                      child: Image.asset(e.img,fit: BoxFit.fill,),
+                    ),
+                  );
+                }).toList(),
+                options: CarouselOptions(),
+              ))
         ],
-      ),
+      ), 
+
+      )
+      
+       
     );
   }
 }
@@ -105,9 +155,14 @@ class __topPartState extends State<_topPart>
               Positioned.fill(
                   left: _movement * (1 - _controller.value),
                   right: _movement * _controller.value,
-                  child: Image.asset(
-                    widget.movie.img,
-                    fit: BoxFit.fill,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => FadeTransition(opacity: animation,child: filmPage(widget.movie),),));
+                    },
+                    child: Image.asset(
+                      widget.movie.img,
+                      fit: BoxFit.cover,
+                    ),
                   )),
             ],
           ),
@@ -153,8 +208,8 @@ class _middlePartState extends State<_middlePart> {
                 _key.currentState!.insertItem(movieies.length - 1);*/
 
                 widget.ontab(index);
-             
-               /* _key.currentState!.removeItem(
+
+                /* _key.currentState!.removeItem(
                     index,
                     (context, animation) => FadeTransition(
                           opacity: animation,
@@ -177,7 +232,7 @@ class _middlePartState extends State<_middlePart> {
               child: Transform(
                   transform: Matrix4.identity()
                     ..setEntry(3, 2, 0.001)
-                    ..rotateY(vector.radians(45*0)),
+                    ..rotateY(vector.radians(45 * 0)),
                   child: Image.asset(
                     _moviesList[index].img,
                     fit: BoxFit.cover,
