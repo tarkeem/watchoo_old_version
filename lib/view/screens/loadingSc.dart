@@ -63,16 +63,7 @@ class _loadingPageState extends State<loadingPage>
           fit: StackFit.expand,
           alignment: Alignment.center,
           children: [
-            Positioned.fill(child:Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.black,Colors.pink],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                
-                )
-              ),
-            ) ),
+          
             Positioned(
                 top: deviceSize.height * 0.5,
                 child: Transform(

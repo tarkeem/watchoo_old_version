@@ -5,7 +5,9 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 import 'package:watchoo/model/film.dart';
+import 'package:watchoo/view/screens/categoriesSc.dart';
 import 'package:watchoo/view/screens/filmPage.dart';
+import 'package:watchoo/view/screens/movieInfoSc.dart';
 import 'package:watchoo/view/widgets/listTileDrawer.dart';
 
 class mainPage extends StatefulWidget {
@@ -21,8 +23,15 @@ List<Movie> _moviesList = List.generate(
         name: 'All Quite',
         img: 'movie.jpg',
         duration: '1:30:7',
-        article: '$index',
-        movieUrl: ':http://localhost:3000//Tutorial aplicación de banco desde CERO_ Flutter(360P).mp4',
+        article: '''
+All Quiet on the Western Front (German: Im Westen nichts Neues (lit. "In the West nothing new")) is a 2022 German-language epic anti-war film based on the 1929 novel of the same name by Erich Maria Remarque. It is the third film adaptation of the book, after the 1930 and 1979 versions. Directed by Edward Berger, it stars Felix Kammerer, Albrecht Schuch, Daniel Brühl, Sebastian Hülk, Aaron Hilmer, Edin Hasanovic, and Devid Striesow.
+
+Set during World War I, it follows the life of an idealistic young German soldier named Paul Bäumer. After enlisting in the German Army with his friends, Bäumer finds himself exposed to the realities of war, shattering his early hopes of becoming a hero as he does his best to survive. The film adds a parallel storyline not found in the book, which follows the armistice negotiations to end the war.
+
+All Quiet on the Western Front premiered at the Toronto International Film Festival on September 12, 2022, and was released to streaming on Netflix on October 28.[3] The film received positive reviews from critics, with praise directed towards its tone and faithfulness to the source material's anti-war message.[4] It received a leading 14 nominations at the 76th British Academy Film Awards (winning seven, including Best Film) and nine at the 95th Academy Awards, including Best Picture, and won four: Best International Feature, Best Cinematography, Best Original Score, and Best Production Design. The four wins tied All Quiet on the Western Front with Fanny and Alexander (1982), Crouching Tiger, Hidden Dragon (2000), and Parasite (2019) as the most-awarded foreign language film in the Oscars' history.[5]
+''',
+        movieUrl:
+            'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
         cast: []));
 
 class _mainPageState extends State<mainPage> {
@@ -32,72 +41,65 @@ class _mainPageState extends State<mainPage> {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
-      body:ElasticDrawer(
-        mainColor: Colors.black,
-        drawerColor: Color.fromARGB(255, 255, 255, 255),
-        drawerChild: Column(
-          children: [
-          customListTile(lead: Text('Type 1'), trail: Icon(Icons.movie), fun: (){}),
-          customListTile(lead: Text('Type 1'), trail: Icon(Icons.movie), fun: (){}),
-          customListTile(lead: Text('Type 1'), trail: Icon(Icons.movie), fun: (){}),
-          customListTile(lead: Text('Type 1'), trail: Icon(Icons.movie), fun: (){}),
-          Spacer(),
-          customListTile(lead: Text('Type 1'), trail: Icon(Icons.logout), fun: (){}),
-          ],
-        ),
-        mainChild:Column(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Positioned(
-                    height: deviceSize.height / 2,
-                    left: 0,
-                    right: 0,
-                    child: AnimatedSwitcher(
-                        duration: Duration(seconds: 1),
-                        child: _topPart(
-                            key: Key(_selected.article), movie: _selected))),
-                Positioned(
-                    height: 100,
-                    top: deviceSize.height / 2 - (100 / 3),
-                    left: 0,
-                    right: 0,
-                    child: _middlePart((int idx) {
-                      setState(() {
-                        _selected = _moviesList[idx];
-                      });
-                    }))
-              ],
-            ),
+        backgroundColor: Colors.black,
+        body: ElasticDrawer(
+          markWidth: 1,
+          mainColor: Colors.black,
+          drawerColor: Colors.transparent,
+          drawerChild: categoriesc(),
+          mainChild: Column(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Positioned(
+                        height: deviceSize.height / 2,
+                        left: 0,
+                        right: 0,
+                        child: AnimatedSwitcher(
+                            duration: Duration(seconds: 1),
+                            child: _topPart(
+                                key: Key(_selected.article),
+                                movie: _selected))),
+                    Positioned(
+                        height: 100,
+                        top: deviceSize.height / 2 - (100 / 3),
+                        left: 0,
+                        right: 0,
+                        child: _middlePart((int idx) {
+                          setState(() {
+                            _selected = _moviesList[idx];
+                          });
+                        }))
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                  flex: 2,
+                  child: CarouselSlider(
+                    items: _moviesList.map((e) {
+                      return LayoutBuilder(
+                        builder: (p0, p1) => Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          height: p1.maxHeight,
+                          width: p1.maxWidth,
+                          child: Image.asset(
+                            e.img,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    options: CarouselOptions(),
+                  ))
+            ],
           ),
-          SizedBox(height: 20,),
-          
-          Expanded(
-              flex: 2,
-              child: CarouselSlider(
-                items: _moviesList.map((e) {
-                  return LayoutBuilder(
-                    builder:(p0, p1) => Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      height: p1.maxHeight,
-                      width: p1.maxWidth,
-                      child: Image.asset(e.img,fit: BoxFit.fill,),
-                    ),
-                  );
-                }).toList(),
-                options: CarouselOptions(),
-              ))
-        ],
-      ), 
-
-      )
-      
-       
-    );
+        ));
   }
 }
 
@@ -157,7 +159,13 @@ class __topPartState extends State<_topPart>
                   right: _movement * _controller.value,
                   child: InkWell(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => FadeTransition(opacity: animation,child: filmPage(widget.movie),),));
+                      Navigator.of(context).pushReplacement(PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            FadeTransition(
+                          opacity: animation,
+                          child: movieInfoSc(widget.movie),
+                        ),
+                      ));
                     },
                     child: Image.asset(
                       widget.movie.img,
