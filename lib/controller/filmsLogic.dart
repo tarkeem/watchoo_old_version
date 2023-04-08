@@ -8,22 +8,23 @@ class MoviesLogic extends ChangeNotifier {
   List<Movie> mianMovies = [];
   List<Movie> recomondedMovies = [];
 
-  void fetchMovies() async {
+  Future fetchMovies() async {
     var resMainMovies =
-        await http.get(Uri.parse('http://localhost:3000/mianMovies'));
-    var MainMoviesDecode = json.decode(resMainMovies.body) as Map<String, List>;
-    mianMovies = MainMoviesDecode['data']!.map((ele) {
+        await http.get(Uri.parse('http://localhost:3000/movie/allmovies/'));
+    var MainMoviesDecode = json.decode(resMainMovies.body) ;
+    print(MainMoviesDecode);
+    mianMovies = MainMoviesDecode['movies']!.map<Movie>((ele) {
       return Movie(
-          name: ele['name'],
-          img: ele['img'],
-          duration: ele['duration'],
-          article: ele['article'],
-          movieUrl: ele['movieUrl'],
+          name: ele['moviename'],
+          img:'http://localhost:3000/'+ele['imageurl'],
+          duration: '1:20:25',
+          article: ele['moviedescription'],
+          movieUrl:'http://localhost:3000/'+ ele['movieurl'],
           cast: []);
     }).toList();
 //...............................................................................
 
-    var resRecmondedMovies =
+    /*var resRecmondedMovies =
         await http.get(Uri.parse('http://localhost:3000/recomondedMovies'));
     var RecmondedMoviesDecode = json.decode(resMainMovies.body) as Map<String, List>;
     recomondedMovies = MainMoviesDecode['data']!.map((ele) {
@@ -34,7 +35,7 @@ class MoviesLogic extends ChangeNotifier {
           article: ele['article'],
            movieUrl: ele['movieUrl'],
           cast: []);
-    }).toList();
-    notifyListeners();
+    }).toList();*/
+    notifyListeners(); //if your provider includes this you have to use change notifier provider instead of provider
   }
 }

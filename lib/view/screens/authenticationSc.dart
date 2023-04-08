@@ -6,10 +6,11 @@ import 'package:flutter/src/widgets/ticker_provider.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:watchoo/controller/authLogic.dart';
+import 'package:watchoo/controller/filmsLogic.dart';
 import 'package:watchoo/view/screens/mianMovieSc.dart';
 import 'package:watchoo/view/widgets/customTextField.dart';
 import 'package:elastic_drawer/elastic_drawer.dart';
-
+import 'package:glass/glass.dart';
 enum auth { logIn, signUp }
 
 class authenticationPage extends StatefulWidget {
@@ -39,24 +40,24 @@ class _authenticationPageState extends State<authenticationPage>
   }
 
   var _formKey = GlobalKey<FormState>();
+  TextEditingController _textEditingController=TextEditingController();
   auth authState = auth.logIn;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-         decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 225, 255, 0),Colors.black],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                
-                )
-              ),
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('poster.jpg'),fit: BoxFit.cover),
+            gradient: LinearGradient(
+          colors: [Color.fromARGB(255, 225, 255, 0), Colors.black],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(child: Lottie.asset('126683-show-time-icon.json')),
+            Expanded(child: Container(child: Lottie.asset('126683-show-time-icon.json'))),
             Expanded(
               child: Form(
                   key: _formKey,
@@ -65,50 +66,63 @@ class _authenticationPageState extends State<authenticationPage>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        customTextField(Label: 'Name',onSave:(val) {
-                          name=val;
-                        }, onValidate:(val) {
-                          if(val==null||val=='')
-                          {
-                            return 'please enter your name';
-                          }
-                          return null;
-                        }, ),
+                        customTextField(
+                          Label: 'Name',
+                          onSave: (val) {
+                            name = val;
+                          },
+                          onValidate: (val) {
+                            if (val == null || val == '') {
+                              return 'please enter your name';
+                            }
+                            return null;
+                          },
+                        ),
                         SizedBox(
                           height: 10,
                         ),
-                        customTextField(Label: 'Password',onSave:(val) {
-                          password=val;
-                        }, onValidate:(val) {
-                          if(val==null||val=='')
-                          {
-                            return 'please enter your password';
-                          }
-                          return null;
-                        }, ),
+                        customTextField(
+                          Label: 'Password',
+                          onSave: (val) {
+                            password = val;
+                          },
+                          onValidate: (val) {
+                            if (val == null || val == '') {
+                              return 'please enter your password';
+                            }
+                            return null;
+                          },textEditingController: _textEditingController,
+                        ),
                         SizedBox(
                           height: 10,
                         ),
                         if (authState == auth.signUp)
-                          customTextField(Label: 'Confirm Password',onSave:(val) {
-                            
-                          }, onValidate:(val) {
-                            if(val==null||val=='')
-                          {
-                            return 'please enter your password';
-                          }
-                          return 'dadasd';
-                          }, ),
+                          customTextField(
+                            Label: 'Confirm Password',
+                            onSave: (val) {},
+                            onValidate: (val) {
+                              if (val == null || val == '') {
+                                return 'please enter your password';
+                              }
+                              else if(val!=_textEditingController.text)
+                              {
+                                return 'the password does\'t match';
+                              }
+                              return null;
+                            },
+                          ),
                         SizedBox(
                           height: 10,
                         ),
                         ElevatedButton(
-                            onPressed: () {
-                              bool _formstate = _formKey.currentState!.validate();
+                            onPressed: () async {
+                              bool _formstate =
+                                  _formKey.currentState!.validate();
+                              var authfun = Provider.of<authLogic>(context,
+                                  listen: false);
 
-                            
-            
                               if (_formstate) {
+                                _formKey.currentState!.save();
                                 /*if (authState == auth.logIn) {
                                   Provider.of<authLogic>(context,listen: false).logIn(name!, password!);
             
@@ -116,6 +130,15 @@ class _authenticationPageState extends State<authenticationPage>
                                    Provider.of<authLogic>(context,listen: false).signup(name!, password!);
                                 }*/
 
+                                  if(authState==auth.logIn)
+                                  {
+                                  await authfun.logIn(name!, password!);  
+                                  }
+                                  else
+                                  {
+                                    print('...............................');
+                                    await authfun.signup(name!, password!);
+                                  }
 
                                   Navigator.of(context).push(PageRouteBuilder(
                                   transitionDuration: Duration(seconds: 1),
@@ -123,16 +146,26 @@ class _authenticationPageState extends State<authenticationPage>
                                       (context, animation, secondaryAnimation) {
                                     return FadeTransition(
                                       opacity: animation,
-                                      child: mainPage(),
+                                      child: ChangeNotifierProvider<MoviesLogic>(
+                                        create: (context) => MoviesLogic(),
+                                        child: mainPage()),
                                     );
                                   }));
                               }
                               return;
-            
-                            
+
+                              /*Navigator.of(context).push(PageRouteBuilder(
+                                  transitionDuration: Duration(seconds: 1),
+                                  pageBuilder:
+                                      (context, animation, secondaryAnimation) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: mainPage(),
+                                    );
+                                  }));*/
                             },
-                            child:
-                                Text(authState == auth.logIn ? 'logIn' : 'signup')),
+                            child: Text(
+                                authState == auth.logIn ? 'logIn' : 'signup')),
                         SizedBox(
                           height: 10,
                         ),

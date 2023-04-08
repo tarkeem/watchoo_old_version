@@ -4,65 +4,42 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class authLogic extends ChangeNotifier {
+  String? token;
 
-String?token;
-
-  void logIn(String name, String Password)async {
-    var res =await http.post(
+  Future logIn(String name, String Password) async {
+    var res = await http.post(
         Uri.parse(
-          'https://locahost:3000/login',
+          'http://localhost:3000/user/signin/',
         ),
-        body: {
-          'name':name,
-          'password':Password
-        });
+        body: json.encode({'name': name, 'pass': Password}),
+        headers: {'Content-Type': 'application/json'});
 
-        var resbody=json.decode(res.body);
+    var resbody = json.decode(res.body);
 
-        if(res.statusCode==200)
-        {
-          token=resbody['message'];
-        }
-        else if(res.statusCode==404)
-        {
-          print('print not found');
-
-        }
-        else
-        {
-          print('something wrong');
-        }
+    if (res.statusCode == 200) {
+      print(resbody);
+      token = resbody['message'];
+    } else if (res.statusCode == 404) {
+      print('print not found');
+    } else {
+      print('something wrong');
+    }
   }
 
-void signup(String name, String Password) async{
+  Future signup(String name, String Password) async {
     var res =await http.post(
         Uri.parse(
-          'https://locahost:3000/signup',
+          'http://localhost:3000/user/signup/',
         ),
-        body: {
-          'name':name,
-          'password':Password
-        });
- var resbody=json.decode(res.body);
-if(res.statusCode==200)
-        {
-          token=resbody['message'];
-        }
-        else if(res.statusCode==404)
-        {
-          print('print not found');
-
-        }
-        else
-        {
-          print('something wrong');
-        }
-
-
+        body: json.encode({'name': name, 'pass': Password}),
+        headers: {'Content-Type': 'application/json'});
+    var resbody = json.decode(res.body);
+    if (res.statusCode == 200) {
+      token = resbody['message'];
+    } else if (res.statusCode == 404) {
+      print('print not found');
+    } else {
+      print('something wrong');
+    }
   }
-
-
-     
-
-
 }

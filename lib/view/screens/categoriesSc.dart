@@ -3,7 +3,6 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:watchoo/model/categories.dart';
 
-
 class categoriesc extends StatefulWidget {
   const categoriesc({super.key});
 
@@ -11,9 +10,11 @@ class categoriesc extends StatefulWidget {
   State<categoriesc> createState() => _categoriescState();
 }
 
-double initPage=2;
+double initPage = 2;
+
 class _categoriescState extends State<categoriesc> {
-  PageController _pageController = PageController(initialPage: initPage.toInt(),viewportFraction: 0.30);
+  PageController _pageController =
+      PageController(initialPage: initPage.toInt(), viewportFraction: 0.30);
 
   double currentPage = initPage;
   int currentPageAsInt = initPage.toInt();
@@ -38,12 +39,20 @@ class _categoriescState extends State<categoriesc> {
 
   @override
   Widget build(BuildContext context) {
-    var deviceSize=MediaQuery.of(context).size;
+    var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
+        clipBehavior: Clip.antiAlias,
         children: [
+          Positioned.fill(
+              child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.black, Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter)),
+          )),
           Positioned(
-           
             child: Container(
               //color: Colors.red,
               child: Transform.scale(
@@ -56,22 +65,23 @@ class _categoriescState extends State<categoriesc> {
                   itemBuilder: (context, index) {
                     currentPageAsInt = index;
                     if (index == 0) {
-                      return Container(color: Colors.red,);
+                      return _categoryAppBar();
                     }
-                     if (index == categories.length) {
-                      _pageController.animateToPage(categories.length-3, duration: Duration(milliseconds: 500), curve: Curves.linear);
+                    if (index == categories.length) {
+                      _pageController.animateToPage(categories.length - 3,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.linear);
                       return SizedBox.shrink();
-                     }
-                  
+                    }
+
                     category catItem = categories[index - 1];
                     var res = currentPage - index + 1;
                     var val = -0.4 * res + 1;
                     var opacityVal = (val).clamp(0.0, 1.0);
-                    if(index==1)
-                    {
-                       print('$index $res  $val  $opacityVal ');
+                    if (index == 1) {
+                      print('$index $res  $val  $opacityVal ');
                     }
-                   
+
                     return Transform(
                         alignment: Alignment.center,
                         transform: Matrix4.identity()
@@ -80,19 +90,88 @@ class _categoriescState extends State<categoriesc> {
                               0.0,
                               (MediaQuery.of(context).size.height /
                                   2.6 *
-                                  (1 - val).abs()),0.0)
-                          ..scale(val,val,val),
+                                  (1 - val).abs()),
+                              0.0)
+                          ..scale(val, val, val),
                         child: Opacity(
                             opacity: opacityVal,
                             child: Hero(
-                              tag: catItem.img_uri,
-                              child: Image.asset(catItem.img_uri))));
+                                tag: catItem.img_uri,
+                                child: Image.asset(catItem.img_uri))));
                   },
                 ),
               ),
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class _categoryAppBar extends StatelessWidget {
+  const _categoryAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var deviceSize = MediaQuery.of(context).size;
+    return Container(
+      color: Colors.transparent,
+      child: Center(
+        child: Container(
+          height: deviceSize.height * 0.2,
+          width: deviceSize.width * 0.5,
+          decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue),),
+                    onPressed: () {},
+                    icon: Icon(Icons.person),
+                    label: Text('profile')),
+                  ),
+                  SizedBox(width: 10,),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 246, 0, 164)),),
+                    onPressed: () {},
+                    icon: Icon(Icons.movie),
+                    label: Text('All movies')),
+                  )
+                ],
+              ),
+              SizedBox(height: 10,),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 0, 0, 0)),),
+                    onPressed: () {},
+                    icon: Icon(Icons.search),
+                    label: Text('Search')),
+                  ),
+                  SizedBox(width: 10,),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 255, 0, 0)),),
+                    onPressed: () {},
+                    icon: Icon(Icons.exit_to_app),
+                    label: Text('Exit')),
+                  )
+                ],
+              )
+            ],
+          )
+        ),
       ),
     );
   }

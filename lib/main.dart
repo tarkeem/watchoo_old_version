@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:watchoo/controller/authLogic.dart';
 import 'package:watchoo/controller/filmsLogic.dart';
+import 'package:watchoo/view/screens/allmoviesSc.dart';
 import 'package:watchoo/view/screens/authenticationSc.dart';
+import 'package:watchoo/view/screens/categoriesMoviesSc.dart';
 import 'package:watchoo/view/screens/categoriesSc.dart';
 import 'package:watchoo/view/screens/loadingSc.dart';
 import 'package:watchoo/view/screens/mianMovieSc.dart';
@@ -24,13 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home:MultiProvider(
-        providers: [
-           ChangeNotifierProvider<authLogic>(create: (_) => authLogic()),
-            ChangeNotifierProvider<MoviesLogic>(create: (_) => MoviesLogic()),
-        ],
-        child:loadingPage()),
-    );
+      home:loadingPage());
   }
 }
 

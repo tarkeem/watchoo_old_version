@@ -3,8 +3,11 @@ import 'package:elastic_drawer/elastic_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 import 'package:vector_math/vector_math.dart' as vector;
+import 'package:watchoo/controller/filmsLogic.dart';
 import 'package:watchoo/model/film.dart';
+import 'package:watchoo/model/fontStyle.dart';
 import 'package:watchoo/view/screens/categoriesSc.dart';
 import 'package:watchoo/view/screens/filmPage.dart';
 import 'package:watchoo/view/screens/movieInfoSc.dart';
@@ -17,9 +20,7 @@ class mainPage extends StatefulWidget {
   State<mainPage> createState() => _mainPageState();
 }
 
-List<Movie> _moviesList = List.generate(
-    10,
-    (index) => Movie(
+List<Movie> _moviesList = [ Movie(
         name: 'All Quite',
         img: 'movie.jpg',
         duration: '1:30:7',
@@ -32,74 +33,96 @@ All Quiet on the Western Front premiered at the Toronto International Film Festi
 ''',
         movieUrl:
             'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-        cast: []));
+        cast: [])];
 
 class _mainPageState extends State<mainPage> {
   Movie _selected = _moviesList[0];
+  bool _isLoading=true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<MoviesLogic>(context,listen: false).fetchMovies().then((value) {
+      setState(() {
+        _isLoading=false;
+        _moviesList=Provider.of<MoviesLogic>(context,listen: false).mianMovies;
+
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
-    return Scaffold(
-        backgroundColor: Colors.black,
-        body: ElasticDrawer(
-          markWidth: 1,
-          mainColor: Colors.black,
-          drawerColor: Colors.transparent,
-          drawerChild: categoriesc(),
-          mainChild: Column(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Positioned(
-                        height: deviceSize.height / 2,
-                        left: 0,
-                        right: 0,
-                        child: AnimatedSwitcher(
-                            duration: Duration(seconds: 1),
-                            child: _topPart(
-                                key: Key(_selected.article),
-                                movie: _selected))),
-                    Positioned(
-                        height: 100,
-                        top: deviceSize.height / 2 - (100 / 3),
-                        left: 0,
-                        right: 0,
-                        child: _middlePart((int idx) {
-                          setState(() {
-                            _selected = _moviesList[idx];
-                          });
-                        }))
-                  ],
-                ),
+    return Stack(
+      children: [
+        Positioned.fill(child:Container(
+          decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter,end: Alignment.bottomCenter,colors: [Colors.brown,Colors.black])),
+        ) ),
+        Scaffold(
+            backgroundColor: Colors.transparent,
+            body: ElasticDrawer(
+              markWidth: 1,
+              mainColor: Colors.transparent,
+              drawerColor: Colors.brown.withOpacity(0.3),
+              drawerChild: categoriesc(),
+              mainChild:_isLoading?Center(child:CircularProgressIndicator(),): Column(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      fit: StackFit.expand,
+                      children: [
+                        Positioned(
+                            height: deviceSize.height / 2,
+                            left: 0,
+                            right: 0,
+                            child: AnimatedSwitcher(
+                                duration: Duration(seconds: 1),
+                                child: _topPart(
+                                    key: Key(_selected.article),
+                                    movie: _selected))),
+                        Positioned(
+                            height: 100,
+                            top: deviceSize.height / 2 - (100 / 2),
+                            left: 0,
+                            right: 0,
+                            child: _middlePart((int idx) {
+                              setState(() {
+                                _selected = _moviesList[idx];
+                              });
+                            }))
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text('Movies of this Week',style: BigFont(Colors.white, 30),),
+                  Expanded(
+                      flex: 2,
+                      child: CarouselSlider(
+                        items: _moviesList.map((e) {
+                          return LayoutBuilder(
+                            builder: (p0, p1) => Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              height: p1.maxHeight,
+                              width: p1.maxWidth,
+                              child: Image.network(
+                                e.img,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        options: CarouselOptions(enlargeCenterPage: true,enlargeStrategy: CenterPageEnlargeStrategy.zoom),
+                      ))
+                ],
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                  flex: 2,
-                  child: CarouselSlider(
-                    items: _moviesList.map((e) {
-                      return LayoutBuilder(
-                        builder: (p0, p1) => Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          height: p1.maxHeight,
-                          width: p1.maxWidth,
-                          child: Image.asset(
-                            e.img,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    options: CarouselOptions(),
-                  ))
-            ],
-          ),
-        ));
+            )),
+      ],
+    );
   }
 }
 
@@ -150,8 +173,8 @@ class __topPartState extends State<_topPart>
               Positioned.fill(
                   left: _movement * (1 - _controller.value),
                   right: _movement * _controller.value,
-                  child: Image.asset(
-                    widget.movie.img,
+                  child: Image.network(
+                    'http://localhost:3000/movie.jpg',
                     fit: BoxFit.fill,
                   )),
               Positioned.fill(
@@ -167,7 +190,7 @@ class __topPartState extends State<_topPart>
                         ),
                       ));
                     },
-                    child: Image.asset(
+                    child: Image.network(
                       widget.movie.img,
                       fit: BoxFit.cover,
                     ),
@@ -203,7 +226,7 @@ class _middlePartState extends State<_middlePart> {
   Widget build(BuildContext context) {
     return AnimatedList(
       key: _key,
-      initialItemCount: 10,
+      initialItemCount: _moviesList.length,
       scrollDirection: Axis.horizontal,
       physics: ScrollPhysics(),
       controller: _scrollController,
@@ -241,7 +264,7 @@ class _middlePartState extends State<_middlePart> {
                   transform: Matrix4.identity()
                     ..setEntry(3, 2, 0.001)
                     ..rotateY(vector.radians(45 * 0)),
-                  child: Image.asset(
+                  child: Image.network(
                     _moviesList[index].img,
                     fit: BoxFit.cover,
                     height: 100,

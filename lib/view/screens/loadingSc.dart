@@ -6,7 +6,11 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/ticker_provider.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:watchoo/controller/authLogic.dart';
+import 'package:watchoo/controller/filmsLogic.dart';
 import 'package:watchoo/view/screens/authenticationSc.dart';
+import 'package:watchoo/view/screens/mianMovieSc.dart';
 
 class loadingPage extends StatefulWidget {
   const loadingPage({super.key});
@@ -42,7 +46,12 @@ class _loadingPageState extends State<loadingPage>
         PageRouteBuilder(
           transitionDuration: Duration(seconds: 1),
           pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(opacity: animation,child: authenticationPage(),);
+        return FadeTransition(opacity: animation,child:MultiProvider(
+        providers: [
+           ChangeNotifierProvider<authLogic>(create: (_) => authLogic()),
+        ],
+        child:authenticationPage(),
+    ),);
       },));
     });
   }
@@ -65,12 +74,12 @@ class _loadingPageState extends State<loadingPage>
           children: [
           
             Positioned(
-                top: deviceSize.height * 0.5,
+                top: deviceSize.height * 0.45,
                 child: Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.identity()
                     ..scale(_scaleAnimation.value, _scaleAnimation.value)
-                    ..translate(80* _moveAnimation.value),
+                    ..translate(90* _moveAnimation.value),
                   child: Container(
                     height: 100,
                     width: 100,

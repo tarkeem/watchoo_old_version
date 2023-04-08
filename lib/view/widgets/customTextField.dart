@@ -8,12 +8,14 @@ class customTextField extends StatelessWidget {
   String Label;
   Function(String? val) onValidate;
   Function(String?val) onSave;
- customTextField({required this.Label,required this.onSave,required this.onValidate});
+  TextEditingController? textEditingController;
+ customTextField({required this.Label,required this.onSave,required this.onValidate, this.textEditingController});
   var border = OutlineInputBorder(
       borderSide: BorderSide(width: 2.5, color: Colors.white));
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: textEditingController,
       validator: (value) {
         return onValidate(value); //first method to pass function
       },

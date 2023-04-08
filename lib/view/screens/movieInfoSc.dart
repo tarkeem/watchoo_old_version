@@ -8,7 +8,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/ticker_provider.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 import 'package:watchoo/model/film.dart';
+import 'package:watchoo/model/fontStyle.dart';
 import 'package:watchoo/view/screens/filmPage.dart';
+import 'package:watchoo/view/screens/mianMovieSc.dart';
 
 class movieInfoSc extends StatefulWidget {
   Movie movie;
@@ -37,22 +39,42 @@ class _movieInfoScState extends State<movieInfoSc>
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _appbar(
-                deviceSize: deviceSize,
-                maxExtend: deviceSize.height * 0.35,
-                minExtend: kToolbarHeight,
-                movie: widget.movie),
+    return Stack(
+      children: [
+        Positioned.fill(child:Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.black,Colors.brown])
           ),
-          SliverToBoxAdapter(
-            child: _body(widget.movie),
-          )
-        ],
-      ),
+        ) ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            leading: BackButton(color:Colors.white,onPressed: () {
+              Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) {
+                return FadeTransition(opacity: animation,child: mainPage(key: Key('dfd'),),);
+              },transitionDuration: Duration(seconds: 1)));
+            }, ),
+            backgroundColor: Colors.transparent,),
+          body: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _appbar(
+                    deviceSize: deviceSize,
+                    maxExtend: deviceSize.height * 0.35,
+                    minExtend: kToolbarHeight,
+                    movie: widget.movie),
+              ),
+              SliverToBoxAdapter(
+                child: _body(widget.movie),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -80,7 +102,7 @@ class _appbar extends SliverPersistentHeaderDelegate {
               right: 0,
               top: 0,*/
               child: Image.asset(
-            'assets/movie.jpg',
+            'movie.jpg',
             fit: BoxFit.cover,
           )),
           if (25 / 100 >= perc) ...[
@@ -120,7 +142,7 @@ class _body extends StatelessWidget {
       children: [
         Text(
           movie.article,
-          style: TextStyle(fontSize: 20),
+          style:BigFont(Colors.white, 15),
         )
       ],
     );
@@ -173,9 +195,9 @@ class _bottomBar extends StatelessWidget {
         bottom: 0,
         left: deviceSize.width *
             (0.25 < perc
-                ? lerpDouble(0, 0.35, (0.65 - (perc).clamp(0, 0.65)))!
+                ? lerpDouble(0, 0.8, (0.65 - (perc).clamp(0, 0.65)))!
                     .toDouble()
-                : lerpDouble(0, 0.35, perc)!.toDouble()),
+                : lerpDouble(0, 0.8, perc)!.toDouble()),
         child: Container(
           //color: Colors.blue,
           height: deviceSize.height * 0.12,
@@ -187,9 +209,9 @@ class _bottomBar extends StatelessWidget {
                 painter: _cuteRectangle(),
               ),
               Align(
-                  alignment: Alignment.center,
+                  alignment: Alignment.bottomCenter,
                   child: Opacity(
-                      opacity: perc,
+                      opacity: 1,
                       child: ElevatedButton(
                         style: ButtonStyle(
                             shape: MaterialStatePropertyAll<OutlinedBorder>(RoundedRectangleBorder(borderRadius:BorderRadius.circular(20))),
