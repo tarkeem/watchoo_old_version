@@ -9,6 +9,7 @@ import 'package:watchoo/view/screens/categoriesSc.dart';
 import 'package:watchoo/view/screens/loadingSc.dart';
 import 'package:watchoo/view/screens/mianMovieSc.dart';
 import 'package:watchoo/view/screens/movieInfoSc.dart';
+import 'package:watchoo/view/screens/searchScdart.dart';
 
 void main() {
   runApp(const MyApp());

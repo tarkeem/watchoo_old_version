@@ -12,7 +12,6 @@ class MoviesLogic extends ChangeNotifier {
     var resMainMovies =
         await http.get(Uri.parse('http://localhost:3000/movie/allmovies/'));
     var MainMoviesDecode = json.decode(resMainMovies.body) ;
-    print(MainMoviesDecode);
     mianMovies = MainMoviesDecode['movies']!.map<Movie>((ele) {
       return Movie(
           name: ele['moviename'],

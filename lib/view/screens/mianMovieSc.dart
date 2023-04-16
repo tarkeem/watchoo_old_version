@@ -12,7 +12,7 @@ import 'package:watchoo/view/screens/categoriesSc.dart';
 import 'package:watchoo/view/screens/filmPage.dart';
 import 'package:watchoo/view/screens/movieInfoSc.dart';
 import 'package:watchoo/view/widgets/listTileDrawer.dart';
-
+import 'package:glass/glass.dart';
 class mainPage extends StatefulWidget {
   mainPage({super.key});
 
@@ -20,33 +20,23 @@ class mainPage extends StatefulWidget {
   State<mainPage> createState() => _mainPageState();
 }
 
-List<Movie> _moviesList = [ Movie(
-        name: 'All Quite',
-        img: 'movie.jpg',
-        duration: '1:30:7',
-        article: '''
-All Quiet on the Western Front (German: Im Westen nichts Neues (lit. "In the West nothing new")) is a 2022 German-language epic anti-war film based on the 1929 novel of the same name by Erich Maria Remarque. It is the third film adaptation of the book, after the 1930 and 1979 versions. Directed by Edward Berger, it stars Felix Kammerer, Albrecht Schuch, Daniel Brühl, Sebastian Hülk, Aaron Hilmer, Edin Hasanovic, and Devid Striesow.
-
-Set during World War I, it follows the life of an idealistic young German soldier named Paul Bäumer. After enlisting in the German Army with his friends, Bäumer finds himself exposed to the realities of war, shattering his early hopes of becoming a hero as he does his best to survive. The film adds a parallel storyline not found in the book, which follows the armistice negotiations to end the war.
-
-All Quiet on the Western Front premiered at the Toronto International Film Festival on September 12, 2022, and was released to streaming on Netflix on October 28.[3] The film received positive reviews from critics, with praise directed towards its tone and faithfulness to the source material's anti-war message.[4] It received a leading 14 nominations at the 76th British Academy Film Awards (winning seven, including Best Film) and nine at the 95th Academy Awards, including Best Picture, and won four: Best International Feature, Best Cinematography, Best Original Score, and Best Production Design. The four wins tied All Quiet on the Western Front with Fanny and Alexander (1982), Crouching Tiger, Hidden Dragon (2000), and Parasite (2019) as the most-awarded foreign language film in the Oscars' history.[5]
-''',
-        movieUrl:
-            'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-        cast: [])];
+List<Movie> _moviesList = [];
 
 class _mainPageState extends State<mainPage> {
-  Movie _selected = _moviesList[0];
-  bool _isLoading=true;
+  late Movie _selected;
+  bool _isLoading = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<MoviesLogic>(context,listen: false).fetchMovies().then((value) {
+    Provider.of<MoviesLogic>(context, listen: false)
+        .fetchMovies()
+        .then((value) {
       setState(() {
-        _isLoading=false;
-        _moviesList=Provider.of<MoviesLogic>(context,listen: false).mianMovies;
-
+        _isLoading = false;
+        _moviesList =
+            Provider.of<MoviesLogic>(context, listen: false).mianMovies;
+        _selected = _moviesList[0];
       });
     });
   }
@@ -56,9 +46,16 @@ class _mainPageState extends State<mainPage> {
     var deviceSize = MediaQuery.of(context).size;
     return Stack(
       children: [
-        Positioned.fill(child:Container(
-          decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter,end: Alignment.bottomCenter,colors: [Colors.brown,Colors.black])),
-        ) ),
+        Positioned.fill(
+            child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/poster.jpg'), fit: BoxFit.cover)),
+        )),
+        Positioned.fill(
+            child: Container(
+          
+        ).asGlass()),
         Scaffold(
             backgroundColor: Colors.transparent,
             body: ElasticDrawer(
@@ -66,60 +63,71 @@ class _mainPageState extends State<mainPage> {
               mainColor: Colors.transparent,
               drawerColor: Colors.brown.withOpacity(0.3),
               drawerChild: categoriesc(),
-              mainChild:_isLoading?Center(child:CircularProgressIndicator(),): Column(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      fit: StackFit.expand,
+              mainChild: _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Column(
                       children: [
-                        Positioned(
-                            height: deviceSize.height / 2,
-                            left: 0,
-                            right: 0,
-                            child: AnimatedSwitcher(
-                                duration: Duration(seconds: 1),
-                                child: _topPart(
-                                    key: Key(_selected.article),
-                                    movie: _selected))),
-                        Positioned(
-                            height: 100,
-                            top: deviceSize.height / 2 - (100 / 2),
-                            left: 0,
-                            right: 0,
-                            child: _middlePart((int idx) {
-                              setState(() {
-                                _selected = _moviesList[idx];
-                              });
-                            }))
+                        Expanded(
+                          flex: 3,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            fit: StackFit.expand,
+                            children: [
+                              Positioned(
+                                  height: deviceSize.height / 2,
+                                  left: 0,
+                                  right: 0,
+                                  child: AnimatedSwitcher(
+                                      duration: Duration(seconds: 1),
+                                      child: _topPart(
+                                          key: Key(_selected.name),
+                                          movie: _selected))),
+                              Positioned(
+                                  height: 100,
+                                  top: deviceSize.height / 2 - (100 / 2),
+                                  left: 0,
+                                  right: 0,
+                                  child: _middlePart((int idx) {
+                                    setState(() {
+                                      _selected = _moviesList[idx];
+                                    });
+                                  }))
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'Movies of this Week',
+                          style: BigFont(Colors.white, 30),
+                        ),
+                        Expanded(
+                            flex: 2,
+                            child: CarouselSlider(
+                              items: _moviesList.map((e) {
+                                return LayoutBuilder(
+                                  builder: (p0, p1) => Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    height: p1.maxHeight,
+                                    width: p1.maxWidth,
+                                    child: Image.network(
+                                      e.img,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              options: CarouselOptions(
+                                  enlargeCenterPage: true,
+                                  enlargeStrategy:
+                                      CenterPageEnlargeStrategy.zoom),
+                            ))
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text('Movies of this Week',style: BigFont(Colors.white, 30),),
-                  Expanded(
-                      flex: 2,
-                      child: CarouselSlider(
-                        items: _moviesList.map((e) {
-                          return LayoutBuilder(
-                            builder: (p0, p1) => Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              height: p1.maxHeight,
-                              width: p1.maxWidth,
-                              child: Image.network(
-                                e.img,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        options: CarouselOptions(enlargeCenterPage: true,enlargeStrategy: CenterPageEnlargeStrategy.zoom),
-                      ))
-                ],
-              ),
             )),
       ],
     );
@@ -173,26 +181,19 @@ class __topPartState extends State<_topPart>
               Positioned.fill(
                   left: _movement * (1 - _controller.value),
                   right: _movement * _controller.value,
-                  child: Image.network(
-                    'http://localhost:3000/movie.jpg',
-                    fit: BoxFit.fill,
-                  )),
-              Positioned.fill(
-                  left: _movement * (1 - _controller.value),
-                  right: _movement * _controller.value,
                   child: InkWell(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            FadeTransition(
-                          opacity: animation,
-                          child: movieInfoSc(widget.movie),
-                        ),
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            ChangeNotifierProvider<MoviesLogic>(
+                                create: (context) => MoviesLogic(),
+                                builder: (context, child) =>
+                                    movieInfoSc(widget.movie)),
                       ));
                     },
                     child: Image.network(
                       widget.movie.img,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                     ),
                   )),
             ],

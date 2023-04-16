@@ -52,12 +52,7 @@ class _movieInfoScState extends State<movieInfoSc>
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            leading: BackButton(color:Colors.white,onPressed: () {
-              Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) {
-                return FadeTransition(opacity: animation,child: mainPage(key: Key('dfd'),),);
-              },transitionDuration: Duration(seconds: 1)));
-            }, ),
-            backgroundColor: Colors.transparent,),
+            backgroundColor: Color.fromARGB(0, 131, 42, 42),),
           body: CustomScrollView(
             slivers: [
               SliverPersistentHeader(
@@ -101,15 +96,15 @@ class _appbar extends SliverPersistentHeaderDelegate {
               left: 0,
               right: 0,
               top: 0,*/
-              child: Image.asset(
-            'movie.jpg',
+              child: Image.network(
+            movie.img,
             fit: BoxFit.cover,
           )),
           if (25 / 100 >= perc) ...[
             _bottomBar(perc, movie),
-            _cardPic(perc)
+            _cardPic(perc,movie)
           ] else ...[
-            _cardPic(perc),
+            _cardPic(perc,movie),
             _bottomBar(perc, movie)
           ]
         ],
@@ -151,7 +146,8 @@ class _body extends StatelessWidget {
 
 class _cardPic extends StatelessWidget {
   double perc;
-  _cardPic(this.perc);
+  Movie movie;
+  _cardPic(this.perc,this.movie);
 
   double maxPerc = 25 / 100;
 
@@ -171,8 +167,8 @@ class _cardPic extends StatelessWidget {
                 vector.radians(0.25 < perc ? valueBack * 2 * 45 : perc * 90)),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(25),
-            child: Image.asset(
-              'movie.jpg',
+            child: Image.network(
+              movie.img,
               height: deviceSize.height * 0.20,
               width: deviceSize.width * 0.20,
             ),
