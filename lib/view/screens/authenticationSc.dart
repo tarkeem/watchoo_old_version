@@ -56,6 +56,7 @@ class _authenticationPageState extends State<authenticationPage>
   var _formKey = GlobalKey<FormState>();
   TextEditingController _textEditingController = TextEditingController();
   auth authState = auth.logIn;
+  bool isLoading=false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +101,7 @@ class _authenticationPageState extends State<authenticationPage>
                                   height: 10,
                                 ),
                                 customTextField(
+                                  
                                   Label: 'Name',
                                   onSave: (val) {
                                     name = val;
@@ -115,6 +117,7 @@ class _authenticationPageState extends State<authenticationPage>
                                   height: 10,
                                 ),
                                 customTextField(
+                                  isSecure: true,
                                   Label: 'Password',
                                   onSave: (val) {
                                     password = val;
@@ -132,6 +135,7 @@ class _authenticationPageState extends State<authenticationPage>
                                 ),
                                 if (authState == auth.signUp)
                                   customTextField(
+                                    isSecure: true,
                                     Label: 'Confirm Password',
                                     onSave: (val) {},
                                     onValidate: (val) {
@@ -147,8 +151,10 @@ class _authenticationPageState extends State<authenticationPage>
                                 SizedBox(
                                   height: 10,
                                 ),
+                              isLoading?CircularProgressIndicator():
                                 ElevatedButton(
                                     onPressed: () async {
+
                                       bool _formstate =
                                           _formKey.currentState!.validate();
                                       var authfun = Provider.of<authLogic>(
@@ -164,6 +170,9 @@ class _authenticationPageState extends State<authenticationPage>
                                         } else {
                                            Provider.of<authLogic>(context,listen: false).signup(name!, password!);
                                         }*/
+                              setState(() {
+                                isLoading=true;
+                              });
 
                                         try {
                                           if (authState == auth.logIn) {
@@ -174,18 +183,21 @@ class _authenticationPageState extends State<authenticationPage>
                                                 name!, password!);
                                           }
                                         } catch (err) {
-                                          print(err);
-                                          const snackBar = SnackBar(
+setState(() {
+  isLoading=false;
+});
+                                          
+                                          String er=err.toString();
+                                           SnackBar snackBar = SnackBar(
                                             backgroundColor: Colors.red,
                                             content:
-                                                Text('wrong! please try again'),
+                                                Text(er),
                                           );
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(snackBar);
                                           return;
                                         }
-                                      }
-                                      Navigator.of(context).push(
+ Navigator.of(context).push(
                                           PageRouteBuilder(
                                               transitionDuration:
                                                   Duration(seconds: 1),
@@ -200,6 +212,8 @@ class _authenticationPageState extends State<authenticationPage>
                                                       child: mainPage()),
                                                 );
                                               }));
+                                      }
+                                     
                                     },
                                     child: Text(authState == auth.logIn
                                         ? 'logIn'

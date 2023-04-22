@@ -9,7 +9,8 @@ class customTextField extends StatelessWidget {
   Function(String? val) onValidate;
   Function(String?val) onSave;
   TextEditingController? textEditingController;
- customTextField({required this.Label,required this.onSave,required this.onValidate, this.textEditingController});
+  bool? isSecure;
+ customTextField({required this.Label,required this.onSave,required this.onValidate, this.textEditingController,this.isSecure});
   var border = OutlineInputBorder(
       borderSide: BorderSide(width: 2.5, color: Colors.white));
   @override
@@ -21,6 +22,7 @@ class customTextField extends StatelessWidget {
       },
       onSaved: onSave,//second method to pass function
       style: TextStyle(color: Color.fromARGB(255, 222, 200, 0)),
+      obscureText:isSecure??false?true:false,
       decoration: InputDecoration(
         hintText: Label,
         labelStyle: TextStyle(color: Colors.white),

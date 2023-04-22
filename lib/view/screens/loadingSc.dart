@@ -48,7 +48,7 @@ class _loadingPageState extends State<loadingPage>
           pageBuilder: (context, animation, secondaryAnimation) {
         return FadeTransition(opacity: animation,child:MultiProvider(
         providers: [
-           ChangeNotifierProvider<authLogic>(create: (_) => authLogic()),
+           ChangeNotifierProvider<authLogic>(create: (_) => authLogic(),child: authenticationPage(),),
         ],
         child:authenticationPage(),
     ),);

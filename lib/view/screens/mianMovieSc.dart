@@ -102,7 +102,7 @@ class _mainPageState extends State<mainPage> {
                         ),
                         Text(
                           'Movies of this Week',
-                          style: BigFont(Colors.white, 30),
+                          style: BigFont(Color.fromARGB(255, 0, 0, 0), 30),
                         ),
                         Expanded(
                             flex: 2,

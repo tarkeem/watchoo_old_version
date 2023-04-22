@@ -137,7 +137,7 @@ class _body extends StatelessWidget {
       children: [
         Text(
           movie.article,
-          style:BigFont(Colors.white, 15),
+          style:BigFont(Colors.white, 15).copyWith(fontFamily:null),
         )
       ],
     );

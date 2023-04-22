@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:watchoo/controller/authLogic.dart';
 import 'package:watchoo/controller/filmsLogic.dart';
 import 'package:watchoo/model/categories.dart';
 import 'package:watchoo/view/screens/allmoviesSc.dart';
+import 'package:watchoo/view/screens/porfileSc.dart';
 
 class categoriesc extends StatefulWidget {
   const categoriesc({super.key});
@@ -138,7 +140,11 @@ class _categoryAppBar extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                                   style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue),),
-                    onPressed: () {},
+                    onPressed: () {
+                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChangeNotifierProvider<authLogic>(
+                        create: (context) => authLogic(),
+                        builder:(context, child) =>ProfileScreen()),));
+                    },
                     icon: Icon(Icons.person),
                     label: Text('profile')),
                   ),
