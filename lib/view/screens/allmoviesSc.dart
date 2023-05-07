@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:watchoo/controller/filmsLogic.dart';
 import 'package:watchoo/model/film.dart';
@@ -102,6 +103,7 @@ class _allMoviesScState extends State<allMoviesSc> {
 
   @override
   Widget build(BuildContext context) {
+    var deviceSize=MediaQuery.of(context).size;
     print(_movies.length);
     return Scaffold(
       body: Container(
@@ -122,14 +124,22 @@ class _allMoviesScState extends State<allMoviesSc> {
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: Container(
-                            child: GridView.builder(
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3, crossAxisSpacing: 6),
-                              itemCount: filtredList.length,
-                              itemBuilder: (context, index) {
-                                return movieContainer(filtredList[index]);
-                              },
+                            child: AnimationLimiter(
+                              child: GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      mainAxisExtent:deviceSize.height*0.40,
+                                        crossAxisCount: 3, crossAxisSpacing: 6),
+                                itemCount: filtredList.length,
+                                itemBuilder: (context, index) {
+                                  return AnimationConfiguration.staggeredGrid(
+                                    columnCount: 3,
+                                    position: index,
+                                    duration: Duration(seconds: 1),
+                                    
+                                    child: ScaleAnimation(child: FadeInAnimation(child: movieContainer(filtredList[index]))));
+                                },
+                              ),
                             ),
                           ),
                         ),

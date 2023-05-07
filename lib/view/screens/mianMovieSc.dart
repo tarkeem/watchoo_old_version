@@ -3,6 +3,7 @@ import 'package:elastic_drawer/elastic_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:provider/provider.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 import 'package:watchoo/controller/filmsLogic.dart';
@@ -13,6 +14,7 @@ import 'package:watchoo/view/screens/filmPage.dart';
 import 'package:watchoo/view/screens/movieInfoSc.dart';
 import 'package:watchoo/view/widgets/listTileDrawer.dart';
 import 'package:glass/glass.dart';
+
 class mainPage extends StatefulWidget {
   mainPage({super.key});
 
@@ -48,14 +50,69 @@ class _mainPageState extends State<mainPage> {
       children: [
         Positioned.fill(
             child: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/poster.jpg'), fit: BoxFit.cover)),
+          color: Colors.black,
         )),
-        Positioned.fill(
+        Positioned(
+          top: 0,
+          left: 0,
             child: Container(
-          
-        ).asGlass()),
+              width: 300,
+              height: 300,
+          decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+            BoxShadow(
+
+                blurRadius: 200,
+                color: Colors.red,
+                spreadRadius: 30,
+                blurStyle: BlurStyle.normal)
+          ]),
+        )),
+        Positioned(
+          bottom: 0,
+          right: 0,
+            child: Container(
+              width: 300,
+              height: 300,
+          decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+            BoxShadow(
+
+                blurRadius: 200,
+                color: Colors.pink,
+                spreadRadius: 30,
+                blurStyle: BlurStyle.normal)
+          ]),
+        )),
+         Positioned(
+          top: 0,
+          right: 0,
+            child: Container(
+              width: 300,
+              height: 300,
+          decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+            BoxShadow(
+
+                blurRadius: 200,
+                color: Colors.blue,
+                spreadRadius: 30,
+                blurStyle: BlurStyle.normal)
+          ]),
+        )),
+         Positioned(
+          bottom: 0,
+          left: 0,
+            child: Container(
+              width: 300,
+              height: 300,
+          decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+            BoxShadow(
+
+                blurRadius: 200,
+                color: Colors.yellow,
+                spreadRadius: 30,
+                blurStyle: BlurStyle.normal)
+          ]),
+        )),
+        Positioned.fill(child: Container().asGlass()),
         Scaffold(
             backgroundColor: Colors.transparent,
             body: ElasticDrawer(
@@ -70,33 +127,31 @@ class _mainPageState extends State<mainPage> {
                   : Column(
                       children: [
                         Expanded(
-                          flex: 3,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            fit: StackFit.expand,
-                            children: [
-                              Positioned(
-                                  height: deviceSize.height / 2,
-                                  left: 0,
-                                  right: 0,
-                                  child: AnimatedSwitcher(
-                                      duration: Duration(seconds: 1),
-                                      child: _topPart(
-                                          key: Key(_selected.name),
-                                          movie: _selected))),
-                              Positioned(
-                                  height: 100,
-                                  top: deviceSize.height / 2 - (100 / 2),
-                                  left: 0,
-                                  right: 0,
-                                  child: _middlePart((int idx) {
-                                    setState(() {
-                                      _selected = _moviesList[idx];
-                                    });
-                                  }))
-                            ],
-                          ),
-                        ),
+                            flex: 3,
+                            child: Swiper(
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            SlideTransition(
+                                          position: animation.drive(Tween(
+                                              begin: Offset(1, 0),
+                                              end: Offset(0, 0))),
+                                          child:
+                                              movieInfoSc(_moviesList[index]),
+                                        ),
+                                      ));
+                                    },
+                                    child:
+                                        Image.network(_moviesList[index].img));
+                              },
+                              itemCount: _moviesList.length,
+                              itemWidth: deviceSize.width * 0.35,
+                              layout: SwiperLayout.STACK,
+                            )),
                         SizedBox(
                           height: 20,
                         ),
@@ -130,149 +185,6 @@ class _mainPageState extends State<mainPage> {
                     ),
             )),
       ],
-    );
-  }
-}
-
-class _topPart extends StatefulWidget {
-  Movie movie;
-  _topPart({super.key, required this.movie});
-
-  @override
-  State<_topPart> createState() => __topPartState();
-}
-
-class __topPartState extends State<_topPart>
-    with SingleTickerProviderStateMixin {
-  double _movement = -100;
-
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 10))
-          ..repeat(reverse: true);
-    //_controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: 1.0,
-      child: Container(
-        /*decoration: BoxDecoration(
-          border: Border.all(color: Colors.red)
-        ),*/
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) => Stack(
-            fit: StackFit.expand,
-            //when clipbehavior=clip.none it  allow that the children of stack to  extend oout of it
-            clipBehavior: Clip.none,
-            children: [
-              Positioned.fill(
-                  left: _movement * (1 - _controller.value),
-                  right: _movement * _controller.value,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            ChangeNotifierProvider<MoviesLogic>(
-                                create: (context) => MoviesLogic(),
-                                builder: (context, child) =>
-                                    movieInfoSc(widget.movie)),
-                      ));
-                    },
-                    child: Image.network(
-                      widget.movie.img,
-                      fit: BoxFit.fill,
-                    ),
-                  )),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _middlePart extends StatefulWidget {
-  Function ontab;
-  _middlePart(this.ontab);
-
-  @override
-  State<_middlePart> createState() => _middlePartState();
-}
-
-class _middlePartState extends State<_middlePart> {
-  late ScrollController _scrollController;
-  final _key = GlobalKey<AnimatedListState>();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    _scrollController = ScrollController()..addListener(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedList(
-      key: _key,
-      initialItemCount: _moviesList.length,
-      scrollDirection: Axis.horizontal,
-      physics: ScrollPhysics(),
-      controller: _scrollController,
-      itemBuilder: (context, index, animation) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: InkWell(
-              onTap: () {
-                /*movieies.insert(movieies.length, movieies[index]);
-                _key.currentState!.insertItem(movieies.length - 1);*/
-
-                widget.ontab(index);
-
-                /* _key.currentState!.removeItem(
-                    index,
-                    (context, animation) => FadeTransition(
-                          opacity: animation,
-                          child: SizeTransition(
-                            axis: Axis.horizontal,
-                            sizeFactor: animation,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                movieies[index].backGround,
-                                fit: BoxFit.cover,
-                                height: 100,
-                                width: 70,
-                              ),
-                            ),
-                          ),
-                        ));
-                           movieies.removeAt(index);*/
-              },
-              child: Transform(
-                  transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001)
-                    ..rotateY(vector.radians(45 * 0)),
-                  child: Image.network(
-                    _moviesList[index].img,
-                    fit: BoxFit.cover,
-                    height: 100,
-                    width: 70,
-                  ))),
-        );
-      },
     );
   }
 }

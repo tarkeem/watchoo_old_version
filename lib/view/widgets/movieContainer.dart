@@ -10,10 +10,9 @@ class movieContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
-      //margin: EdgeInsets.all(10),
-      height: 100,
-      width: 100,
+      margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(image: NetworkImage(_movie.img),fit: BoxFit.fill)),
@@ -32,7 +31,7 @@ class movieContainer extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Expanded(child:Text(_movie.name,style: BigFont(Colors.black, 18),)),
+                    Expanded(child:Text(_movie.name,)),
                     ratedStars()
                   ],
                 ),

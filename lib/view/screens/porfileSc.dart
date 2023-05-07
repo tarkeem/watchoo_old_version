@@ -64,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
                     if (val == null || val == "") {
                       return 'please fill the form';
                     }
-                    else if(val!=authLogic.pass)
+                    else if(val!=authLogic().pass)
                     {
                       return 'The old password not Correct Password';
                     }

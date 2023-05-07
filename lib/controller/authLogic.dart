@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:watchoo/view/screens/authenticationSc.dart';
 
 class authLogic extends ChangeNotifier {
-  static String? token;
+  String? token;
   String? name;
-  static String? pass;
+  String? pass;
 
   Future logIn(String name, String Password) async {
     this.name = name;

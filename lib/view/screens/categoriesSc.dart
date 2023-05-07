@@ -153,9 +153,7 @@ class _categoryAppBar extends StatelessWidget {
                     child: ElevatedButton.icon(
                                   style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 246, 0, 164)),),
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChangeNotifierProvider<MoviesLogic>(
-                        create: (context) => MoviesLogic(),
-                        builder:(context, child) =>allMoviesSc()),));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => allMoviesSc()),);
                     },
                     icon: Icon(Icons.movie),
                     label: Text('All movies')),

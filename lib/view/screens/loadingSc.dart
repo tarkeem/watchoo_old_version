@@ -46,12 +46,8 @@ class _loadingPageState extends State<loadingPage>
         PageRouteBuilder(
           transitionDuration: Duration(seconds: 1),
           pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(opacity: animation,child:MultiProvider(
-        providers: [
-           ChangeNotifierProvider<authLogic>(create: (_) => authLogic(),child: authenticationPage(),),
-        ],
-        child:authenticationPage(),
-    ),);
+        return FadeTransition(opacity: animation,child:authenticationPage(),
+    );
       },));
     });
   }
