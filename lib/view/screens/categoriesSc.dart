@@ -141,9 +141,7 @@ class _categoryAppBar extends StatelessWidget {
                     child: ElevatedButton.icon(
                                   style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue),),
                     onPressed: () {
-                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChangeNotifierProvider<authLogic>(
-                        create: (context) => authLogic(),
-                        builder:(context, child) =>ProfileScreen()),));
+                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
                     },
                     icon: Icon(Icons.person),
                     label: Text('profile')),

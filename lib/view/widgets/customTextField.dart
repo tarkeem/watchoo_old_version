@@ -24,10 +24,11 @@ class customTextField extends StatelessWidget {
       style: TextStyle(color: Color.fromARGB(255, 222, 200, 0)),
       obscureText:isSecure??false?true:false,
       decoration: InputDecoration(
+        hintStyle: TextStyle(color: Colors.white),
         hintText: Label,
         labelStyle: TextStyle(color: Colors.white),
-        floatingLabelBehavior:FloatingLabelBehavior.always ,//important to write a text on border
-        enabledBorder: border,border: border, labelText: Label,/*label: Text(Label)*/),
+        //floatingLabelBehavior:FloatingLabelBehavior.always ,//important to write a text on border
+        enabledBorder: border,border: border, label:Text(Label),/*label: Text(Label)*/),
     );
   }
 }

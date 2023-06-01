@@ -7,12 +7,13 @@ import 'package:watchoo/view/screens/authenticationSc.dart';
 
 class authLogic extends ChangeNotifier {
   String? token;
-  String? name;
+  String? tname;
   String? pass;
 
   Future logIn(String name, String Password) async {
-    this.name = name;
+    tname = name;
     pass=Password;
+    print(tname);
     try {
       var res = await http.post(
           Uri.parse(

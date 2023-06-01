@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 TextStyle BigFont(Color col,double siz)
 {
-  return TextStyle(color: col,fontSize: siz,fontStyle: FontStyle.italic,fontWeight: FontWeight.w700,fontFamily: 'AREEIRO DEMO');
+  return GoogleFonts.abrilFatface(color: col,fontSize: siz);
 }

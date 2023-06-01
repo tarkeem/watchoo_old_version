@@ -6,6 +6,7 @@ import 'package:flutter/src/animation/animation_controller.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/ticker_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:vector_math/vector_math.dart' as vector;
 import 'package:watchoo/model/film.dart';
 import 'package:watchoo/model/fontStyle.dart';
@@ -41,18 +42,19 @@ class _movieInfoScState extends State<movieInfoSc>
     var deviceSize = MediaQuery.of(context).size;
     return Stack(
       children: [
-        Positioned.fill(child:Container(
+        Positioned.fill(
+            child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.black,Colors.brown])
-          ),
-        ) ),
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black, Colors.brown])),
+        )),
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            backgroundColor: Color.fromARGB(0, 131, 42, 42),),
+            backgroundColor: Color.fromARGB(0, 131, 42, 42),
+          ),
           body: CustomScrollView(
             slivers: [
               SliverPersistentHeader(
@@ -102,9 +104,9 @@ class _appbar extends SliverPersistentHeaderDelegate {
           )),
           if (25 / 100 >= perc) ...[
             _bottomBar(perc, movie),
-            _cardPic(perc,movie)
+            _cardPic(perc, movie)
           ] else ...[
-            _cardPic(perc,movie),
+            _cardPic(perc, movie),
             _bottomBar(perc, movie)
           ]
         ],
@@ -127,19 +129,44 @@ class _appbar extends SliverPersistentHeaderDelegate {
   }
 }
 
-class _body extends StatelessWidget {
+class _body extends StatefulWidget {
   Movie movie;
   _body(this.movie);
 
   @override
+  State<_body> createState() => _bodyState();
+}
+
+class _bodyState extends State<_body>with SingleTickerProviderStateMixin {
+
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _animationController=AnimationController(vsync: this,duration: Duration(milliseconds: 800),);
+
+    _animationController.forward(from: 0);
+  }
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          movie.article,
-          style:BigFont(Colors.white, 15).copyWith(fontFamily:null),
-        )
-      ],
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder:(context, child) => Transform.translate(
+        offset:Offset(0,400*(1-_animationController.value)) ,
+        child: Column(
+          children: [
+            Opacity(
+              opacity: _animationController.value,
+              child: Text(
+                widget.movie.article,
+                style:GoogleFonts.acme(fontSize: 30,color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -147,7 +174,7 @@ class _body extends StatelessWidget {
 class _cardPic extends StatelessWidget {
   double perc;
   Movie movie;
-  _cardPic(this.perc,this.movie);
+  _cardPic(this.perc, this.movie);
 
   double maxPerc = 25 / 100;
 
@@ -191,8 +218,7 @@ class _bottomBar extends StatelessWidget {
         bottom: 0,
         left: deviceSize.width *
             (0.25 < perc
-                ? lerpDouble(0, 0.8, (0.65 - (perc).clamp(0, 0.65)))!
-                    .toDouble()
+                ? lerpDouble(0, 0.8, (0.65 - (perc).clamp(0, 0.65)))!.toDouble()
                 : lerpDouble(0, 0.8, perc)!.toDouble()),
         child: Container(
           //color: Colors.blue,
@@ -203,6 +229,7 @@ class _bottomBar extends StatelessWidget {
             children: [
               CustomPaint(
                 painter: _cuteRectangle(),
+                
               ),
               Align(
                   alignment: Alignment.bottomCenter,
@@ -210,15 +237,18 @@ class _bottomBar extends StatelessWidget {
                       opacity: 1,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                            shape: MaterialStatePropertyAll<OutlinedBorder>(RoundedRectangleBorder(borderRadius:BorderRadius.circular(20))),
-                            backgroundColor:
-                                MaterialStateProperty.all(Color.fromARGB(255, 245, 255, 54))),
+                            shape: MaterialStatePropertyAll<OutlinedBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                            backgroundColor: MaterialStateProperty.all(
+                                Color.fromARGB(255, 245, 255, 54))),
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: Text(
                             'Watch now',
-                                              
-                            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 20),
                           ),
                         ),
                         onPressed: () {
@@ -243,7 +273,7 @@ class _cuteRectangle extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Color.fromARGB(255, 98, 0, 246)
+      ..color = Color.fromARGB(255, 0, 0, 0)
       ..style = PaintingStyle.fill;
     Path path = Path();
     path.moveTo(0, size.height);
