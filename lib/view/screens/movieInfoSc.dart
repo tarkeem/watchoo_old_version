@@ -24,10 +24,12 @@ class movieInfoSc extends StatefulWidget {
 class _movieInfoScState extends State<movieInfoSc>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  
 
   @override
   void initState() {
     super.initState();
+    
     _controller = AnimationController(vsync: this);
   }
 
@@ -140,12 +142,13 @@ class _body extends StatefulWidget {
 class _bodyState extends State<_body>with SingleTickerProviderStateMixin {
 
   late AnimationController _animationController;
-
+  late Animation<double> _animation;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _animationController=AnimationController(vsync: this,duration: Duration(milliseconds: 800),);
+    _animation=CurvedAnimation(parent: _animationController, curve: Curves.decelerate);
 
     _animationController.forward(from: 0);
   }
@@ -154,11 +157,11 @@ class _bodyState extends State<_body>with SingleTickerProviderStateMixin {
     return AnimatedBuilder(
       animation: _animationController,
       builder:(context, child) => Transform.translate(
-        offset:Offset(0,400*(1-_animationController.value)) ,
+        offset:Offset(0,400*(1-_animation.value)) ,
         child: Column(
           children: [
             Opacity(
-              opacity: _animationController.value,
+              opacity: _animation.value,
               child: Text(
                 widget.movie.article,
                 style:GoogleFonts.acme(fontSize: 30,color: Colors.white),

@@ -6,6 +6,8 @@ import 'package:watchoo/controller/authLogic.dart';
 import 'package:watchoo/controller/filmsLogic.dart';
 import 'package:watchoo/model/categories.dart';
 import 'package:watchoo/view/screens/allmoviesSc.dart';
+import 'package:watchoo/view/screens/authenticationSc.dart';
+import 'package:watchoo/view/screens/mianMovieSc.dart';
 import 'package:watchoo/view/screens/porfileSc.dart';
 
 class categoriesc extends StatefulWidget {
@@ -174,7 +176,11 @@ class _categoryAppBar extends StatelessWidget {
                                   style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 255, 0, 0)),),
                     onPressed: () {},
                     icon: Icon(Icons.exit_to_app),
-                    label: Text('Exit')),
+                    label: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => authenticationPage(),));
+                      },
+                      child: Text('Exit'))),
                   )
                 ],
               )

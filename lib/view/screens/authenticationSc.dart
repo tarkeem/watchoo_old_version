@@ -57,7 +57,7 @@ class _authenticationPageState extends State<authenticationPage>
   var _formKey = GlobalKey<FormState>();
   TextEditingController _textEditingController = TextEditingController();
   auth authState = auth.logIn;
-  bool isLoading=false;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +90,10 @@ class _authenticationPageState extends State<authenticationPage>
                           gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
-                              colors: [Colors.black.withOpacity(0.6), Colors.white.withOpacity(0.6)])),
+                              colors: [
+                            Colors.black.withOpacity(0.6),
+                            Colors.white.withOpacity(0.6)
+                          ])),
                       child: Row(
                         children: [
                           Expanded(
@@ -98,7 +101,8 @@ class _authenticationPageState extends State<authenticationPage>
                             child: Form(
                                 key: _formKey,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -106,7 +110,6 @@ class _authenticationPageState extends State<authenticationPage>
                                         height: 10,
                                       ),
                                       customTextField(
-                                        
                                         Label: 'Name',
                                         onSave: (val) {
                                           name = val;
@@ -133,7 +136,8 @@ class _authenticationPageState extends State<authenticationPage>
                                           }
                                           return null;
                                         },
-                                        textEditingController: _textEditingController,
+                                        textEditingController:
+                                            _textEditingController,
                                       ),
                                       SizedBox(
                                         height: 10,
@@ -156,78 +160,83 @@ class _authenticationPageState extends State<authenticationPage>
                                       SizedBox(
                                         height: 10,
                                       ),
-                                    isLoading?CircularProgressIndicator():
-                                      ElevatedButton(
-                                          onPressed: () async {
-                          
-                                            bool _formstate =
-                                                _formKey.currentState!.validate();
-                                            var authfun = Provider.of<authLogic>(
-                                                context,
-                                                listen: false);
-                                            Response res;
-                          
-                                            if (_formstate) {
-                                              _formKey.currentState!.save();
-                                              /*if (authState == auth.logIn) {
+                                      isLoading
+                                          ? CircularProgressIndicator()
+                                          : ElevatedButton(
+                                              onPressed: () async {
+                                                bool _formstate = _formKey
+                                                    .currentState!
+                                                    .validate();
+                                                var authfun =
+                                                    Provider.of<authLogic>(
+                                                        context,
+                                                        listen: false);
+                                                Response res;
+
+                                                if (_formstate) {
+                                                  _formKey.currentState!.save();
+                                                  /*if (authState == auth.logIn) {
                                                 Provider.of<authLogic>(context,listen: false).logIn(name!, password!);
                                     
                                               } else {
                                                  Provider.of<authLogic>(context,listen: false).signup(name!, password!);
                                               }*/
-                                    setState(() {
-                                      isLoading=true;
-                                    });
-                          
-                                              try {
-                                                if (authState == auth.logIn) {
-                                                  await authfun.logIn(
-                                                      name!, password!);
-                                                } else {
-                                                  await authfun.signup(
-                                                      name!, password!);
+                                                  setState(() {
+                                                    isLoading = true;
+                                                  });
+
+                                                  try {
+                                                    if (authState ==
+                                                        auth.logIn) {
+                                                      await authfun.logIn(
+                                                          name!, password!);
+                                                    } else {
+                                                      await authfun.signup(
+                                                          name!, password!);
+                                                    }
+                                                  } catch (err) {
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+
+                                                    String er = err.toString();
+                                                    SnackBar snackBar =
+                                                        SnackBar(
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      content: Text(er),
+                                                    );
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(snackBar);
+                                                    return;
+                                                  }
+                                                  Navigator.of(context).pushReplacement(
+                                                      PageRouteBuilder(
+                                                          transitionDuration:
+                                                              Duration(
+                                                                  seconds: 1),
+                                                          pageBuilder: (context,
+                                                              animation,
+                                                              secondaryAnimation) {
+                                                            return FadeTransition(
+                                                                opacity:
+                                                                    animation,
+                                                                child:
+                                                                    mainPage());
+                                                          }));
                                                 }
-                                              } catch (err) {
-                          setState(() {
-                            isLoading=false;
-                          });
-                                                
-                                                String er=err.toString();
-                                                 SnackBar snackBar = SnackBar(
-                                                  backgroundColor: Colors.red,
-                                                  content:
-                                                      Text(er),
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                                return;
-                                              }
-                           Navigator.of(context).push(
-                                                PageRouteBuilder(
-                                                    transitionDuration:
-                                                        Duration(seconds: 1),
-                                                    pageBuilder: (context, animation,
-                                                        secondaryAnimation) {
-                                                      return FadeTransition(
-                                                        opacity: animation,
-                                                        child: ChangeNotifierProvider<
-                                                                MoviesLogic>(
-                                                            create: (context) =>
-                                                                MoviesLogic(),
-                                                            child: mainPage()),
-                                                      );
-                                                    }));
-                                            }
-                                           
-                                          },
-                                          child: Text(authState == auth.logIn
-                                              ? 'logIn'
-                                              : 'signup')),
+                                              },
+                                              child: Text(
+                                                  authState == auth.logIn
+                                                      ? 'logIn'
+                                                      : 'signup')),
                                       SizedBox(
                                         height: 10,
                                       ),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             authState == auth.logIn
@@ -245,9 +254,10 @@ class _authenticationPageState extends State<authenticationPage>
                                                   }
                                                 });
                                               },
-                                              child: Text(authState == auth.logIn
-                                                  ? 'Create One Now'
-                                                  : 'signIn'))
+                                              child: Text(
+                                                  authState == auth.logIn
+                                                      ? 'Create One Now'
+                                                      : 'signIn'))
                                         ],
                                       )
                                     ],
@@ -259,10 +269,14 @@ class _authenticationPageState extends State<authenticationPage>
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                            Image.network('https://www.spadealaw.com/wp-content/uploads/2019/01/googleplus.png'),
-                            Image.network('https://th.bing.com/th/id/R.ff5342ad67f403139a1fdf6c6e66c962?rik=odvtP69dxRXakQ&riu=http%3a%2f%2f1.bp.blogspot.com%2f-CnTGBZaanBY%2fUO9sKnXkBJI%2fAAAAAAAAEB8%2fZ5b9Ei0xris%2fs1600%2fFacebook%2blogo.png&ehk=GFzNdcj9lV4OuLVynIAWxGgQag7uXsSfrWOQsGSPYyk%3d&risl=&pid=ImgRaw&r=0')
-                            ,Image.network('https://th.bing.com/th/id/R.b757f2bca8039d4a08882d38f4c1b8f0?rik=ghH7DAGg25Eeew&riu=http%3a%2f%2fpluspng.com%2fimg-png%2ftwitter-png-logo-logo-twitter-in-png-2500.png&ehk=8T3AUm4YM1VPbzANgHJr0FTLLw4och8GO%2bj%2fFN9SSrA%3d&risl=&pid=ImgRaw&r=0')
-                            ],),
+                                Image.network(
+                                    'https://www.spadealaw.com/wp-content/uploads/2019/01/googleplus.png'),
+                                Image.network(
+                                    'https://th.bing.com/th/id/R.ff5342ad67f403139a1fdf6c6e66c962?rik=odvtP69dxRXakQ&riu=http%3a%2f%2f1.bp.blogspot.com%2f-CnTGBZaanBY%2fUO9sKnXkBJI%2fAAAAAAAAEB8%2fZ5b9Ei0xris%2fs1600%2fFacebook%2blogo.png&ehk=GFzNdcj9lV4OuLVynIAWxGgQag7uXsSfrWOQsGSPYyk%3d&risl=&pid=ImgRaw&r=0'),
+                                Image.network(
+                                    'https://th.bing.com/th/id/R.b757f2bca8039d4a08882d38f4c1b8f0?rik=ghH7DAGg25Eeew&riu=http%3a%2f%2fpluspng.com%2fimg-png%2ftwitter-png-logo-logo-twitter-in-png-2500.png&ehk=8T3AUm4YM1VPbzANgHJr0FTLLw4och8GO%2bj%2fFN9SSrA%3d&risl=&pid=ImgRaw&r=0')
+                              ],
+                            ),
                           )
                         ],
                       ),

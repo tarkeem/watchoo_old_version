@@ -95,10 +95,8 @@ class authLogic extends ChangeNotifier {
         content: Text('deleted successfully'),
         
       ));
-
-      Navigator.of(cxt).pushReplacement(MaterialPageRoute(builder: (context) => ChangeNotifierProvider<authLogic>(
-                        create: (context) => authLogic(),
-                        builder:(context, child) =>authenticationPage()),));
+//dont use material page route
+      Navigator.of(cxt).pushReplacement(PageRouteBuilder(pageBuilder:(context, animation, secondaryAnimation) =>authenticationPage()),);
 
 
     }
