@@ -1,5 +1,16 @@
-# watchop
-a movie app to watch movies and TV shows with a node js server I created to upload movies
-The application is equipped with an authentication process as the user can make his/her own account.
-MVC pattern has been used.
-node js server:https://github.com/tarkeem/tvoo_backend
+# watchoo
+
+A new Flutter project.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

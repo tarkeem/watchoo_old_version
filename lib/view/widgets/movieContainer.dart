@@ -2,8 +2,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:watchoo/model/film.dart';
-import 'package:watchoo/model/fontStyle.dart';
 import 'package:glass/glass.dart';
+import 'package:watchoo/view/widgets/ratedStars.dart';
 class movieContainer extends StatelessWidget {
   Movie _movie;
   movieContainer(this._movie);
@@ -31,30 +31,15 @@ class movieContainer extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Expanded(child:Text(_movie.name,)),
-                    ratedStars()
+                    ratedStar(star: int.parse(_movie.rate),)
                   ],
                 ),
-              ).asGlass())
+              ))
         ],
       ),
     );
   }
 }
 
-Widget ratedStars() {
-  return Expanded(
-    child: FittedBox(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.star_rate,color: Colors.yellow,),
-          Icon(Icons.star_rate,color: Colors.yellow,),
-          Icon(Icons.star_rate,color: Colors.yellow,),
-          Icon(Icons.star_rate,color: Colors.yellow,),
-          Icon(Icons.star_rate),
-        ],
-      ),
-    ),
-  );
-}
+
+

@@ -2,19 +2,13 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/animation/animation_controller.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/ticker_provider.dart';
-import 'package:http/http.dart';
-import 'package:lottie/lottie.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:watchoo/constanst.dart';
 import 'package:watchoo/controller/authLogic.dart';
-import 'package:watchoo/controller/filmsLogic.dart';
-import 'package:watchoo/model/fontStyle.dart';
 import 'package:watchoo/view/screens/mianMovieSc.dart';
+import 'package:watchoo/view/widgets/MySnackBar.dart';
 import 'package:watchoo/view/widgets/customTextField.dart';
-import 'package:elastic_drawer/elastic_drawer.dart';
 import 'package:glass/glass.dart';
 
 enum auth { logIn, signUp }
@@ -33,15 +27,16 @@ class _authenticationPageState extends State<authenticationPage>
 
   String? password;
   String? name;
+  String? email;
 
   @override
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _animation = CurvedAnimation(parent: _controller, curve: Curves.decelerate);
     Timer(
-      Duration(seconds: 2),
+      const Duration(seconds: 2),
       () {
         _controller.forward();
       },
@@ -54,8 +49,8 @@ class _authenticationPageState extends State<authenticationPage>
     super.dispose();
   }
 
-  var _formKey = GlobalKey<FormState>();
-  TextEditingController _textEditingController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _textEditingController = TextEditingController();
   auth authState = auth.logIn;
   bool isLoading = false;
   @override
@@ -63,56 +58,63 @@ class _authenticationPageState extends State<authenticationPage>
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('poster.jpg'), fit: BoxFit.cover),
-            gradient: LinearGradient(
-              colors: [Color.fromARGB(255, 225, 255, 0), Colors.black],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            )),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-                child: Container(
-                    child: Lottie.asset('126683-show-time-icon.json'))),
-            Expanded(
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) => Opacity(
-                  opacity: _controller.value,
-                  child: Transform.translate(
-                    offset: Offset(
-                        0, lerpDouble(200, 0, _animation.value)!.toDouble()),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                            Colors.black.withOpacity(0.6),
-                            Colors.white.withOpacity(0.6)
-                          ])),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 7,
-                            child: Form(
-                                key: _formKey,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 30),
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/poster.jpg'), fit: BoxFit.cover),
+        ),
+      
+          child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) => Opacity(
+                    opacity: _controller.value,
+                    child: Transform.translate(
+                      offset: Offset(
+                          0, lerpDouble(200, 0, _animation.value)!.toDouble()),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                              const Color.fromARGB(255, 9, 18, 37).withOpacity(0.6),
+                              const Color.fromARGB(255, 9, 18, 37),
+                              const Color.fromARGB(255, 9, 18, 37)
+                            ])),
+                        child: Center(
+                          child: Form(
+                              key: _formKey,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                child: SingleChildScrollView(
                                   child: Column(
-                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      SizedBox(
+                                      Text("Watchoo",style: GoogleFonts.aclonica(fontSize:30,color:Colors.white),),
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       customTextField(
-                                        Label: 'Name',
+                                        icon: Icon(Icons.abc,color: Colors.white,),
+                                          isSecure: false,
+                                          Label: 'Name',
+                                          onSave: (val) {
+                                            name = val;
+                                          },
+                                          onValidate: (val) {
+                                            if (val == null || val == '') {
+                                              return 'please enter your Email';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      customTextField(
+                                        icon: Icon(Icons.email,color: Colors.white,),
+                                        Label: 'Email',
                                         onSave: (val) {
-                                          name = val;
+                                          email = val;
                                         },
                                         onValidate: (val) {
                                           if (val == null || val == '') {
@@ -121,10 +123,9 @@ class _authenticationPageState extends State<authenticationPage>
                                           return null;
                                         },
                                       ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
+                                     
                                       customTextField(
+                                          icon: Icon(Icons.lock_outline,color: Colors.white,),
                                         isSecure: true,
                                         Label: 'Password',
                                         onSave: (val) {
@@ -139,11 +140,11 @@ class _authenticationPageState extends State<authenticationPage>
                                         textEditingController:
                                             _textEditingController,
                                       ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      if (authState == auth.signUp)
+                                    
+                                      if (authState == auth.signUp) ...[
+                                        
                                         customTextField(
+                                            icon: Icon(Icons.lock_outline,color: Colors.white,),
                                           isSecure: true,
                                           Label: 'Confirm Password',
                                           onSave: (val) {},
@@ -157,81 +158,17 @@ class _authenticationPageState extends State<authenticationPage>
                                             return null;
                                           },
                                         ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
+                                        
+                                      ],
+                                     
                                       isLoading
-                                          ? CircularProgressIndicator()
+                                          ? const CircularProgressIndicator()
                                           : ElevatedButton(
-                                              onPressed: () async {
-                                                bool _formstate = _formKey
-                                                    .currentState!
-                                                    .validate();
-                                                var authfun =
-                                                    Provider.of<authLogic>(
-                                                        context,
-                                                        listen: false);
-                                                Response res;
-
-                                                if (_formstate) {
-                                                  _formKey.currentState!.save();
-                                                  /*if (authState == auth.logIn) {
-                                                Provider.of<authLogic>(context,listen: false).logIn(name!, password!);
-                                    
-                                              } else {
-                                                 Provider.of<authLogic>(context,listen: false).signup(name!, password!);
-                                              }*/
-                                                  setState(() {
-                                                    isLoading = true;
-                                                  });
-
-                                                  try {
-                                                    if (authState ==
-                                                        auth.logIn) {
-                                                      await authfun.logIn(
-                                                          name!, password!);
-                                                    } else {
-                                                      await authfun.signup(
-                                                          name!, password!);
-                                                    }
-                                                  } catch (err) {
-                                                    setState(() {
-                                                      isLoading = false;
-                                                    });
-
-                                                    String er = err.toString();
-                                                    SnackBar snackBar =
-                                                        SnackBar(
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      content: Text(er),
-                                                    );
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(snackBar);
-                                                    return;
-                                                  }
-                                                  Navigator.of(context).pushReplacement(
-                                                      PageRouteBuilder(
-                                                          transitionDuration:
-                                                              Duration(
-                                                                  seconds: 1),
-                                                          pageBuilder: (context,
-                                                              animation,
-                                                              secondaryAnimation) {
-                                                            return FadeTransition(
-                                                                opacity:
-                                                                    animation,
-                                                                child:
-                                                                    mainPage());
-                                                          }));
-                                                }
-                                              },
-                                              child: Text(
-                                                  authState == auth.logIn
-                                                      ? 'logIn'
-                                                      : 'signup')),
-                                      SizedBox(
+                                              onPressed: validateAuth,
+                                              child: Text(authState == auth.logIn
+                                                  ? 'Log In'
+                                                  : 'Sign Up')),
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Row(
@@ -241,8 +178,8 @@ class _authenticationPageState extends State<authenticationPage>
                                           Text(
                                             authState == auth.logIn
                                                 ? 'You Don\'t Have one?'
-                                                : 'You Have Already One',
-                                            style: BigFont(Colors.black, 20),
+                                                : 'You Have Already One?',
+                                            style: constants.bigFont,
                                           ),
                                           TextButton(
                                               onPressed: () {
@@ -255,43 +192,56 @@ class _authenticationPageState extends State<authenticationPage>
                                                 });
                                               },
                                               child: Text(
-                                                  authState == auth.logIn
-                                                      ? 'Create One Now'
-                                                      : 'signIn'))
+                                                authState == auth.logIn
+                                                    ? 'Create One Now'
+                                                    : 'signIn',
+                                                style: constants.noticeFont,
+                                              ))
                                         ],
                                       )
                                     ],
                                   ),
-                                )),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Image.network(
-                                    'https://www.spadealaw.com/wp-content/uploads/2019/01/googleplus.png'),
-                                Image.network(
-                                    'https://th.bing.com/th/id/R.ff5342ad67f403139a1fdf6c6e66c962?rik=odvtP69dxRXakQ&riu=http%3a%2f%2f1.bp.blogspot.com%2f-CnTGBZaanBY%2fUO9sKnXkBJI%2fAAAAAAAAEB8%2fZ5b9Ei0xris%2fs1600%2fFacebook%2blogo.png&ehk=GFzNdcj9lV4OuLVynIAWxGgQag7uXsSfrWOQsGSPYyk%3d&risl=&pid=ImgRaw&r=0'),
-                                Image.network(
-                                    'https://th.bing.com/th/id/R.b757f2bca8039d4a08882d38f4c1b8f0?rik=ghH7DAGg25Eeew&riu=http%3a%2f%2fpluspng.com%2fimg-png%2ftwitter-png-logo-logo-twitter-in-png-2500.png&ehk=8T3AUm4YM1VPbzANgHJr0FTLLw4och8GO%2bj%2fFN9SSrA%3d&risl=&pid=ImgRaw&r=0')
-                              ],
-                            ),
-                          )
-                        ],
+                                ),
+                              )),
+                        ),
                       ),
-                    ).asGlass(
-                        tintColor: Color.fromARGB(255, 0, 0, 0),
-                        clipBorderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20))),
-                  ),
-                ),
-              ),
-            )
-          ],
+                    ),
+                  )),
         ),
-      ),
+      
     );
+  }
+
+  void validateAuth() async {
+    bool formstate = _formKey.currentState!.validate();
+    var authfun = Provider.of<authLogic>(context, listen: false);
+    if (formstate) {
+      _formKey.currentState!.save();
+
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        if (authState == auth.logIn) {
+          await authfun.logIn(name!, password!);
+        } else {
+          await authfun.signup(email!, name!, password!);
+        }
+      } catch (err) {
+        setState(() {
+          isLoading = false;
+        });
+
+        String er = err.toString();
+        showSnackBar(Colors.red, er, context);
+        return;
+      }
+      Navigator.of(context).pushReplacement(PageRouteBuilder(
+          transitionDuration: const Duration(seconds: 1),
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return FadeTransition(opacity: animation, child: const mainPage());
+          }));
+    }
   }
 }

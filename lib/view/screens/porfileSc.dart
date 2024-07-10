@@ -111,6 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   customTextField(
+                      icon: Icon(Icons.abc),
                     Label: 'name',
                     onSave: (val) {
                       newname = val;
@@ -142,6 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 25,
                   ),*/
                   customTextField(
+                      icon: Icon(Icons.abc),
                     isSecure: true,
                     Label: 'Confirm password',
                     onSave: (val) {

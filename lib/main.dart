@@ -2,14 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:watchoo/controller/authLogic.dart';
 import 'package:watchoo/controller/filmsLogic.dart';
-import 'package:watchoo/view/screens/allmoviesSc.dart';
 import 'package:watchoo/view/screens/authenticationSc.dart';
-import 'package:watchoo/view/screens/categoriesMoviesSc.dart';
-import 'package:watchoo/view/screens/categoriesSc.dart';
-import 'package:watchoo/view/screens/loadingSc.dart';
-import 'package:watchoo/view/screens/mianMovieSc.dart';
-import 'package:watchoo/view/screens/movieInfoSc.dart';
-import 'package:watchoo/view/screens/porfileSc.dart';
+
 
 void main() {
   runApp(const MyApp());

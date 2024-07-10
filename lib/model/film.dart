@@ -4,11 +4,10 @@ import 'package:watchoo/model/actor.dart';
 class Movie
 {
   String name;
-  String duration;
-  String article;
-  List<Actor>cast;
+  String description;
   String img;
+  String rate;
   String movieUrl;
-  Movie({required this.name,required this.img,required this.movieUrl,required this.duration,required this.article,required this.cast});
+  Movie({required this.name,required this.rate,required this.img,required this.movieUrl,required this.description});
   
 }

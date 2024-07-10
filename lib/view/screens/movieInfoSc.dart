@@ -6,16 +6,18 @@ import 'package:flutter/src/animation/animation_controller.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/ticker_provider.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vector_math/vector_math.dart' as vector;
+import 'package:watchoo/constanst.dart';
 import 'package:watchoo/model/film.dart';
-import 'package:watchoo/model/fontStyle.dart';
 import 'package:watchoo/view/screens/filmPage.dart';
 import 'package:watchoo/view/screens/mianMovieSc.dart';
+import 'package:watchoo/view/widgets/ratedStars.dart';
 
 class movieInfoSc extends StatefulWidget {
   Movie movie;
-  movieInfoSc(this.movie);
+  movieInfoSc(this.movie, {super.key});
 
   @override
   State<movieInfoSc> createState() => _movieInfoScState();
@@ -50,13 +52,10 @@ class _movieInfoScState extends State<movieInfoSc>
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.black, Colors.brown])),
+                  colors: [Colors.black, constants.mainColor])),
         )),
         Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            backgroundColor: Color.fromARGB(0, 131, 42, 42),
-          ),
           body: CustomScrollView(
             slivers: [
               SliverPersistentHeader(
@@ -104,7 +103,7 @@ class _appbar extends SliverPersistentHeaderDelegate {
             movie.img,
             fit: BoxFit.cover,
           )),
-          if (25 / 100 >= perc) ...[
+          if (30 / 100 >= perc) ...[
             _bottomBar(perc, movie),
             _cardPic(perc, movie)
           ] else ...[
@@ -147,7 +146,7 @@ class _bodyState extends State<_body>with SingleTickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _animationController=AnimationController(vsync: this,duration: Duration(milliseconds: 800),);
+    _animationController=AnimationController(vsync: this,duration: const Duration(milliseconds: 800),);
     _animation=CurvedAnimation(parent: _animationController, curve: Curves.decelerate);
 
     _animationController.forward(from: 0);
@@ -158,16 +157,36 @@ class _bodyState extends State<_body>with SingleTickerProviderStateMixin {
       animation: _animationController,
       builder:(context, child) => Transform.translate(
         offset:Offset(0,400*(1-_animation.value)) ,
-        child: Column(
-          children: [
-            Opacity(
-              opacity: _animation.value,
-              child: Text(
-                widget.movie.article,
-                style:GoogleFonts.acme(fontSize: 30,color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ratedStar(star: 4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(5),
+                    child: Text('Action'),decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.white),),
+                    Container(
+                       margin: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(5),
+                    child: Text('150 Minutes'),decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.white),),
+                  
+                ],
               ),
-            )
-          ],
+              Text(widget.movie.name,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.red),),
+              Opacity(
+                opacity: _animation.value,
+                child: Text(
+                  widget.movie.description,
+                  style:GoogleFonts.acme(fontSize: 18,color: Colors.white),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -194,7 +213,7 @@ class _cardPic extends StatelessWidget {
           transform: Matrix4.identity()
             ..setEntry(3, 2, 0.001)
             ..rotateZ(
-                vector.radians(0.25 < perc ? valueBack * 2 * 45 : perc * 90)),
+                vector.radians(0.32 < perc ? valueBack * 2 * 45 : perc * 90)),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(25),
             child: Image.network(
@@ -209,7 +228,7 @@ class _cardPic extends StatelessWidget {
 
 class _bottomBar extends StatelessWidget {
   double perc;
-  Movie _movie;
+  final Movie _movie;
   _bottomBar(this.perc, this._movie);
 
   @override
@@ -220,10 +239,10 @@ class _bottomBar extends StatelessWidget {
     return Positioned(
         bottom: 0,
         left: deviceSize.width *
-            (0.25 < perc
+            (0.32 < perc
                 ? lerpDouble(0, 0.8, (0.65 - (perc).clamp(0, 0.65)))!.toDouble()
                 : lerpDouble(0, 0.8, perc)!.toDouble()),
-        child: Container(
+        child: SizedBox(
           //color: Colors.blue,
           height: deviceSize.height * 0.12,
           width: deviceSize.width,
@@ -238,33 +257,17 @@ class _bottomBar extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Opacity(
                       opacity: 1,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            shape: MaterialStatePropertyAll<OutlinedBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20))),
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromARGB(255, 245, 255, 54))),
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            'Watch now',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                fontSize: 20),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushReplacement(PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    FadeTransition(
-                              opacity: animation,
-                              child: filmPage(_movie),
-                            ),
-                          ));
-                        },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          
+                          CustomButton(movie: _movie),
+                          SizedBox(width: 10,),
+                          Icon(Icons.favorite,color: Colors.red,size: 30,),
+                            SizedBox(width: 10,),
+                          Icon(Icons.share,color: Colors.blue,size: 30,),
+
+                        ],
                       )))
             ],
           ),
@@ -272,11 +275,52 @@ class _bottomBar extends StatelessWidget {
   }
 }
 
+class CustomButton extends StatelessWidget {
+  const CustomButton({
+    super.key,
+    required Movie movie,
+  }) : _movie = movie;
+
+  final Movie _movie;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ButtonStyle(
+          shape: MaterialStatePropertyAll<OutlinedBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20))),
+          backgroundColor: MaterialStateProperty.all(
+              const Color.fromARGB(255, 245, 255, 54))),
+      child: const Padding(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          'Watch Now',
+          style: TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 20,fontWeight: FontWeight.bold),
+        ),
+      ),
+      onPressed: () {
+        Navigator.of(context)
+            .pushReplacement(PageRouteBuilder(
+          pageBuilder:
+              (context, animation, secondaryAnimation) =>
+                  FadeTransition(
+            opacity: animation,
+            child: filmPage(_movie),
+          ),
+        ));
+      },
+    );
+  }
+}
+
 class _cuteRectangle extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Color.fromARGB(255, 0, 0, 0)
+      ..color = const Color.fromARGB(255, 0, 0, 0)
       ..style = PaintingStyle.fill;
     Path path = Path();
     path.moveTo(0, size.height);

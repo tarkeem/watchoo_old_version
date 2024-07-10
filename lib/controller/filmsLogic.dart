@@ -6,35 +6,56 @@ import 'package:http/http.dart' as http;
 
 class MoviesLogic extends ChangeNotifier {
   List<Movie> mianMovies = [];
+  List<Movie> searchedMovies = [];
+  int reaminingPage = 0;
   List<Movie> recomondedMovies = [];
 
   Future fetchMovies() async {
     var resMainMovies =
-        await http.get(Uri.parse('http://localhost:3000/movie/allmovies/'));
-    var MainMoviesDecode = json.decode(resMainMovies.body) ;
-    mianMovies = MainMoviesDecode['movies']!.map<Movie>((ele) {
-      return Movie(
-          name: ele['moviename'],
-          img:'http://localhost:3000/'+ele['imageurl'],
-          duration: '1:20:25',
-          article: ele['moviedescription'],
-          movieUrl:'http://localhost:3000/'+ ele['movieurl'],
-          cast: []);
-    }).toList();
+        await http.get(Uri.parse('http://10.0.2.2:3000/movie/allmovies/'));
+    var decode = json.decode(resMainMovies.body) ;
+   var allMovies = decode['movies']!;
+   print(allMovies);
+    mianMovies.clear();
+
+   allMovies.forEach((element) {
+     mianMovies.add(Movie(
+                rate:  element['rate']??"4", 
+                description: element['moviedescription'],
+                img:element['imageurl'],
+                movieUrl: element['movieurl'],
+                name: element['moviename']
+         ));
+   },);
+   
+   
 //...............................................................................
 
-    /*var resRecmondedMovies =
-        await http.get(Uri.parse('http://localhost:3000/recomondedMovies'));
-    var RecmondedMoviesDecode = json.decode(resMainMovies.body) as Map<String, List>;
-    recomondedMovies = MainMoviesDecode['data']!.map((ele) {
-      return Movie(
-          name: ele['name'],
-           img: ele['img'],
-          duration: ele['duration'],
-          article: ele['article'],
-           movieUrl: ele['movieUrl'],
-          cast: []);
-    }).toList();*/
+   
+    notifyListeners(); //if your provider includes this you have to use change notifier provider instead of provider
+  }
+
+  Future searchMovies(String name,int page) async {
+    var resSearchMovie =
+        await http.get(Uri.parse('http://localhost:3000/movie/search/?name=$name&page=$page'));
+    var decode = json.decode(resSearchMovie.body) ;
+   var allMovies = decode['movies']!;
+   reaminingPage = decode['reminingPage']!;
+
+   allMovies.forEach((element) {
+     searchedMovies.add(Movie(
+      rate:  element['rate']??"4",
+                description: element['moviedescription'],
+                img:element['imageurl'],
+                movieUrl: element['movieurl'],
+                name: element['moviename']
+         ));
+   },);
+   
+   
+//...............................................................................
+
+   
     notifyListeners(); //if your provider includes this you have to use change notifier provider instead of provider
   }
 }

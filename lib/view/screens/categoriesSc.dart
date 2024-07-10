@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:watchoo/constanst.dart';
 import 'package:watchoo/controller/authLogic.dart';
 import 'package:watchoo/controller/filmsLogic.dart';
 import 'package:watchoo/model/categories.dart';
-import 'package:watchoo/view/screens/allmoviesSc.dart';
+import 'package:watchoo/view/screens/SearchSc.dart';
 import 'package:watchoo/view/screens/authenticationSc.dart';
 import 'package:watchoo/view/screens/mianMovieSc.dart';
 import 'package:watchoo/view/screens/porfileSc.dart';
@@ -20,7 +22,7 @@ class categoriesc extends StatefulWidget {
 double initPage = 2;
 
 class _categoriescState extends State<categoriesc> {
-  PageController _pageController =
+  final PageController _pageController =
       PageController(initialPage: initPage.toInt(), viewportFraction: 0.30);
 
   double currentPage = initPage;
@@ -53,9 +55,9 @@ class _categoriescState extends State<categoriesc> {
         children: [
           Positioned.fill(
               child: Container(
-            decoration: BoxDecoration(
+            decoration:  BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Colors.black, Colors.white],
+                    colors: [Colors.black,constants.mainColor],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter)),
           )),
@@ -72,13 +74,13 @@ class _categoriescState extends State<categoriesc> {
                   itemBuilder: (context, index) {
                     currentPageAsInt = index;
                     if (index == 0) {
-                      return _categoryAppBar();
+                      return const _categoryAppBar();
                     }
                     if (index == categories.length) {
                       _pageController.animateToPage(categories.length - 3,
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.linear);
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     }
 
                     category catItem = categories[index - 1];
@@ -125,69 +127,8 @@ class _categoryAppBar extends StatelessWidget {
     return Container(
       color: Colors.transparent,
       child: Center(
-        child: Container(
-          height: deviceSize.height * 0.2,
-          width: deviceSize.width * 0.5,
-          decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                  bottomRight: Radius.circular(20))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue),),
-                    onPressed: () {
-                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
-                    },
-                    icon: Icon(Icons.person),
-                    label: Text('profile')),
-                  ),
-                  SizedBox(width: 10,),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 246, 0, 164)),),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => allMoviesSc()),);
-                    },
-                    icon: Icon(Icons.movie),
-                    label: Text('All movies')),
-                  )
-                ],
-              ),
-              SizedBox(height: 10,),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 0, 0, 0)),),
-                    onPressed: () {},
-                    icon: Icon(Icons.search),
-                    label: Text('Search')),
-                  ),
-                  SizedBox(width: 10,),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 255, 0, 0)),),
-                    onPressed: () {},
-                    icon: Icon(Icons.exit_to_app),
-                    label: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushReplacement(PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => authenticationPage(),));
-                      },
-                      child: Text('Exit'))),
-                  )
-                ],
-              )
-            ],
-          )
-        ),
-      ),
+        child: Text("Watchoo",style: GoogleFonts.aclonica(fontSize:30,color:Colors.white),),
+      )
     );
   }
 }
